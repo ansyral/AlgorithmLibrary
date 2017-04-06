@@ -40,7 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graph\Class1.cs" />
+    <Compile Include="Graph\Edge.cs" />
+    <Compile Include="Graph\GraphWithAdjacentList.cs" />
+    <Compile Include="Graph\GraphWithAdjacentMatrix.cs" />
+    <Compile Include="Graph\IGraph.cs" />
+    <Compile Include="Graph\Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
