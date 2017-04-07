@@ -46,14 +46,14 @@
             {
                 throw new ArgumentNullException(nameof(edges));
             }
-            int len = edges.GetLength(0);
-            if (len != edges.GetLength(1) || len != vertices.Count)
+            int len = vertices.Count;
+            if (len != edges.GetLength(0) || len != edges.GetLength(1))
             {
-                throw new ArgumentException("edges data is illegal.");
+                throw new ArgumentException("edges length doesn't match vertex count.");
             }
             Vertices = new List<Vertex<T>>(vertices);
             _edges = new int[len, len];
-            Array.Copy(edges, _edges, len*len);
+            Array.Copy(edges, _edges, len * len);
             IsDirected = isDirected;
         }
     }

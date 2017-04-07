@@ -57,9 +57,13 @@
                 new List<Edge<char>>
                 {
                     new Edge<char> { From = vertices[0], To = vertices[1], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[0], Weight = 1 },
                     new Edge<char> { From = vertices[1], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[1], Weight = 1 },
                     new Edge<char> { From = vertices[0], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[0], Weight = 1 },
                     new Edge<char> { From = vertices[3], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 1 },
                 },
                 false);
             var res = GraphAlgoSet.DFS(graph);
@@ -75,8 +79,11 @@
                 new List<Edge<char>>
                 {
                     new Edge<char> { From = vertices[0], To = vertices[1], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[0], Weight = 1 },
                     new Edge<char> { From = vertices[1], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[1], Weight = 1 },
                     new Edge<char> { From = vertices[3], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 1 },
                 },
                 false);
             var res = GraphAlgoSet.DFS(graph);

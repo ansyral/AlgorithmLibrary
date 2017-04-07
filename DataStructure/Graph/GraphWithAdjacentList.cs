@@ -105,14 +105,6 @@
                 _indexOnFrom[e.From] = adjacent = new List<Edge<T>>();
             }
             adjacent.Add(e);
-            if (!IsDirected)
-            {
-                if (!_indexOnFrom.TryGetValue(e.To, out adjacent))
-                {
-                    _indexOnFrom[e.To] = adjacent = new List<Edge<T>>();
-                }
-                adjacent.Add(e);
-            }
         }
 
         private void BuildToIndex(Edge<T> e)
@@ -123,14 +115,6 @@
                 _indexOnTo[e.To] = adjacent = new List<Edge<T>>();
             }
             adjacent.Add(e);
-            if (!IsDirected)
-            {
-                if (!_indexOnTo.TryGetValue(e.From, out adjacent))
-                {
-                    _indexOnTo[e.From] = adjacent = new List<Edge<T>>();
-                }
-                adjacent.Add(e);
-            }
         }
     }
 }
