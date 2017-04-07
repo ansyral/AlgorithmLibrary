@@ -11,6 +11,8 @@
 
         public List<Vertex<T>> Vertices { get; }
 
+        public bool IsDirected { get; }
+
         public List<Edge<T>> EdgesFrom(Vertex<T> v)
         {
             if (v == null)
@@ -39,13 +41,14 @@
             return new List<Edge<T>>();
         }
 
-        public GraphWithAdjacentList()
+        public GraphWithAdjacentList(bool isDirected)
         {
             Vertices = new List<Vertex<T>>();
             _edges = new List<Edge<T>>();
+            IsDirected = isDirected;
         }
 
-        public GraphWithAdjacentList(List<Vertex<T>> vertices, List<Edge<T>> edges)
+        public GraphWithAdjacentList(List<Vertex<T>> vertices, List<Edge<T>> edges, bool isDirected)
         {
             if (vertices == null)
             {
@@ -57,6 +60,7 @@
             }
             Vertices = new List<Vertex<T>>(vertices);
             _edges = new List<Edge<T>>(edges);
+            IsDirected = isDirected;
             BuildIndex();
         }
 
@@ -101,7 +105,7 @@
                 _indexOnFrom[e.From] = adjacent = new List<Edge<T>>();
             }
             adjacent.Add(e);
-            if (e.BiDirectional)
+            if (!IsDirected)
             {
                 if (!_indexOnFrom.TryGetValue(e.To, out adjacent))
                 {
@@ -119,7 +123,7 @@
                 _indexOnTo[e.To] = adjacent = new List<Edge<T>>();
             }
             adjacent.Add(e);
-            if (e.BiDirectional)
+            if (!IsDirected)
             {
                 if (!_indexOnTo.TryGetValue(e.From, out adjacent))
                 {

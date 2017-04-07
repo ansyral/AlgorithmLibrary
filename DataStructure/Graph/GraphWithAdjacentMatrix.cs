@@ -10,6 +10,8 @@
 
         public List<Vertex<T>> Vertices { get; }
 
+        public bool IsDirected { get; }
+
         public List<Edge<T>> EdgesFrom(Vertex<T> v)
         {
             int index = Vertices.IndexOf(v);
@@ -34,7 +36,7 @@
                     select new Edge<T>() { From = Vertices[i], To = v, Weight = _edges[i, index] }).ToList();
         }
 
-        public GraphWithAdjacentMatrix(List<Vertex<T>> vertices, int[,] edges)
+        public GraphWithAdjacentMatrix(List<Vertex<T>> vertices, int[,] edges, bool isDirected)
         {
             if (vertices == null)
             {
@@ -51,7 +53,8 @@
             }
             Vertices = new List<Vertex<T>>(vertices);
             _edges = new int[len, len];
-            Array.Copy(edges, _edges, len);
+            Array.Copy(edges, _edges, len*len);
+            IsDirected = isDirected;
         }
     }
 }

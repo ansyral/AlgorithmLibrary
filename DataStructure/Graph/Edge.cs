@@ -7,7 +7,5 @@
         public Vertex<T> From { get; set; }
 
         public Vertex<T> To { get; set; }
-
-        public bool BiDirectional { get; set; }
     }
 }
