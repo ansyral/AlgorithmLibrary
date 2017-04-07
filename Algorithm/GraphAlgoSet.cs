@@ -8,6 +8,7 @@
 
     public static class GraphAlgoSet
     {
+        // Check circle, toplogical sort
         public static ImmutableList<Vertex<T>> DFS<T>(IGraph<T> g)
         {
             var context = new TraverseContext<T>(g);
@@ -20,6 +21,33 @@
                         return null;
                     }
                 }
+            }
+            return context.TraverseResult.ToImmutableList();
+        }
+
+        // shortest path for unweighted graph
+        public static ImmutableList<Vertex<T>> BFS<T>(IGraph<T> g)
+        {
+            var context = new TraverseContext<T>(g);
+            var start = g.Vertices[0];
+            Queue<Vertex<T>> queue = new Queue<Vertex<T>>();
+            queue.Enqueue(start);
+            context.SetVisitStatus(start, VisitStatus.Grey);
+            while (queue.Count > 0)
+            {
+                var cur = queue.Dequeue();
+                context.Visit(cur);
+                foreach (var edge in g.EdgesFrom(cur))
+                {
+                    var child = edge.To;
+                    if (context.GetVisitStatus(child) == VisitStatus.White)
+                    {
+                        queue.Enqueue(child);
+                        context.SetVisitStatus(child, VisitStatus.Grey);
+                        context.SetParent(child, cur);
+                    }
+                }
+                context.SetVisitStatus(cur, VisitStatus.Black);
             }
             return context.TraverseResult.ToImmutableList();
         }
