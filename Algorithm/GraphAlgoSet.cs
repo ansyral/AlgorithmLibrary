@@ -8,15 +8,15 @@
 
     public static class GraphAlgoSet
     {
-        // Check circle, toplogical sort
-        public static ImmutableList<Vertex<T>> DFS<T>(IGraph<T> g)
+        // Check circle, topological sort
+        public static ImmutableList<Vertex<T>> DFS<T>(IGraph<T> g, bool reverseVisit = false)
         {
             var context = new TraverseContext<T>(g);
             foreach (var v in g.Vertices)
             {
                 if (context.GetVisitStatus(v) == VisitStatus.White)
                 {
-                    if (!DFS(g, v, context))
+                    if (!DFS(g, v, context, reverseVisit))
                     {
                         return null;
                     }
@@ -52,9 +52,56 @@
             return context.TraverseResult.ToImmutableList();
         }
 
-        private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context)
+        public static ImmutableList<Vertex<T>> TopologicalSort<T>(IGraph<T> g)
         {
-            context.Visit(cur);
+            if (!g.IsDirected)
+            {
+                throw new InvalidOperationException("Only directed graph support topological sort.");
+            }
+            var result = new List<Vertex<T>>();
+            var queue = new Queue<Vertex<T>>();
+            var degree = new Dictionary<Vertex<T>, int>();
+            foreach (var v in g.Vertices)
+            {
+                int count = g.EdgesTo(v).Count;
+                if (count == 0)
+                {
+                    queue.Enqueue(v);
+                }
+                degree[v] = count;
+            }
+            while (queue.Count > 0)
+            {
+                var cur = queue.Dequeue();
+                result.Add(cur);
+                foreach (var e in g.EdgesFrom(cur))
+                {
+                    degree[e.To]--;
+                    if (degree[e.To] == 0)
+                    {
+                        queue.Enqueue(e.To);
+                    }
+                }
+            }
+            if (result.Count != g.Vertices.Count)
+            {
+                Console.WriteLine("Cycle exists in the graph");
+                return null;
+            }
+            return result.ToImmutableList();
+        }
+
+        public static ImmutableList<Vertex<T>> TopologicalSortWithDFS<T>(IGraph<T> g)
+        {
+            return DFS(g, true);
+        }
+
+        private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit)
+        {
+            if (!reverseVisit)
+            {
+                context.Visit(cur);
+            }
             context.SetVisitStatus(cur, VisitStatus.Grey);
             var parent = context.GetParent(cur);
             foreach (var edge in g.EdgesFrom(cur))
@@ -76,7 +123,7 @@
                     }
                     else
                     {
-                        if (!DFS(g, child, context))
+                        if (!DFS(g, child, context, reverseVisit))
                         {
                             return false;
                         }
@@ -84,6 +131,10 @@
                 }
             }
             context.SetVisitStatus(cur, VisitStatus.Black);
+            if (reverseVisit)
+            {
+                context.Visit(cur, reverse: true);
+            }
             return true;
         }
 
@@ -141,9 +192,16 @@
             TraverseResult = new List<Vertex<T>>();
         }
 
-        public void Visit(Vertex<T> v)
+        public void Visit(Vertex<T> v, bool reverse = false)
         {
-            TraverseResult.Add(v);
+            if (reverse)
+            {
+                TraverseResult.Insert(0, v);
+            }
+            else
+            {
+                TraverseResult.Add(v);
+            }
         }
 
         public VisitStatus GetVisitStatus(Vertex<T> v)
@@ -170,7 +228,7 @@
             _parent[i] = p;
         }
 
-        private int GetIndex(Vertex<T> v)
+        public int GetIndex(Vertex<T> v)
         {
             if (v == null)
             {

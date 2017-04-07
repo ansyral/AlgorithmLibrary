@@ -251,5 +251,93 @@
             Assert.Equal(res.Count, 4);
             Assert.Equal(string.Concat(res.Select(r => r.Data)), "ABCD");
         }
+
+        [Fact]
+        public void TestTopologicalSortOnCyclicGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[0], Weight = 1 },
+                    new Edge<char> { From = vertices[3], To = vertices[2], Weight = 1 },
+                },
+                true);
+            var res1 = GraphAlgoSet.TopologicalSort(graph);
+            var res2 = GraphAlgoSet.TopologicalSortWithDFS(graph);
+            Assert.Equal(res1, null);
+            Assert.Equal(res2, null);
+        }
+
+        [Fact]
+        public void TestTopologicalSortOnACyclicGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[0], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[3], To = vertices[2], Weight = 1 },
+                },
+                true);
+            var res1 = GraphAlgoSet.TopologicalSort(graph);
+            var res2 = GraphAlgoSet.TopologicalSortWithDFS(graph);
+            Assert.True(res1 != null);
+            Assert.Equal(res1.Count, 4);
+            Assert.Equal(string.Concat(res1.Select(r => r.Data)), "ADBC");
+            Assert.True(res2 != null);
+            Assert.Equal(res2.Count, 4);
+            Assert.Equal(string.Concat(res2.Select(r => r.Data)), "DABC");
+        }
+
+        [Fact]
+        public void TestTopologicalSortOnCyclicGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 1, int.MaxValue, int.MaxValue },
+                    { int.MaxValue, 0, 1, int.MaxValue },
+                    { 1,int.MaxValue, 0, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, 1, 0 },
+                },
+                true);
+            var res1 = GraphAlgoSet.TopologicalSort(graph);
+            var res2 = GraphAlgoSet.TopologicalSortWithDFS(graph);
+            Assert.Equal(res1, null);
+            Assert.Equal(res2, null);
+        }
+
+        [Fact]
+        public void TestTopologicalSortOnACyclicGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 1, 1, int.MaxValue },
+                    { int.MaxValue, 0, 1, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, 0, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, 1, 0 },
+                },
+                true);
+            var res1 = GraphAlgoSet.TopologicalSort(graph);
+            var res2 = GraphAlgoSet.TopologicalSortWithDFS(graph);
+            Assert.True(res1 != null);
+            Assert.Equal(res1.Count, 4);
+            Assert.Equal(string.Concat(res1.Select(r => r.Data)), "ADBC");
+            Assert.True(res2 != null);
+            Assert.Equal(res2.Count, 4);
+            Assert.Equal(string.Concat(res2.Select(r => r.Data)), "DABC");
+        }
     }
 }
