@@ -431,5 +431,101 @@
             Assert.Contains("C", formatted);
             Assert.Contains("D", formatted);
         }
+
+        [Fact]
+        public void TestBellmanFordOnDirectedGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 6 },
+                    new Edge<char> { From = vertices[0], To = vertices[2], Weight = 7 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 8 },
+                    new Edge<char> { From = vertices[1], To = vertices[3], Weight = -4 },
+                    new Edge<char> { From = vertices[1], To = vertices[4], Weight = 5 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 9 },
+                    new Edge<char> { From = vertices[2], To = vertices[4], Weight = -3 },
+                    new Edge<char> { From = vertices[3], To = vertices[0], Weight = 2 },
+                    new Edge<char> { From = vertices[3], To = vertices[4], Weight = 7 },
+                    new Edge<char> { From = vertices[4], To = vertices[1], Weight = -2 },
+                },
+                true);
+            var res = GraphAlgoSet.BellmanFord(graph, vertices[0]);
+            Assert.True(res != null);
+            Assert.Equal(0, res[vertices[0]]);
+            Assert.Equal(2, res[vertices[1]]);
+            Assert.Equal(7, res[vertices[2]]);
+            Assert.Equal(-2, res[vertices[3]]);
+            Assert.Equal(4, res[vertices[4]]);
+        }
+
+        [Fact]
+        public void TestBellmanFordOnDirectedNegativeCyclicGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 6 },
+                    new Edge<char> { From = vertices[0], To = vertices[2], Weight = 7 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 8 },
+                    new Edge<char> { From = vertices[1], To = vertices[3], Weight = -4 },
+                    new Edge<char> { From = vertices[1], To = vertices[4], Weight = 5 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 9 },
+                    new Edge<char> { From = vertices[2], To = vertices[4], Weight = -3 },
+                    new Edge<char> { From = vertices[3], To = vertices[0], Weight = 2 },
+                    new Edge<char> { From = vertices[3], To = vertices[4], Weight = 7 },
+                    new Edge<char> { From = vertices[4], To = vertices[1], Weight = -6 },
+                },
+                true);
+            var res = GraphAlgoSet.BellmanFord(graph, vertices[0]);
+            Assert.Equal(res, null);
+        }
+
+        [Fact]
+        public void TestBellmanFordOnDirectedGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 6, 7, int.MaxValue, int.MaxValue },
+                    { int.MaxValue, 0, 8, -4, 5 },
+                    { int.MaxValue, int.MaxValue, 0, 9, -3 },
+                    { 2, int.MaxValue, int.MaxValue, 0, 7 },
+                    { int.MaxValue, -2, int.MaxValue, int.MaxValue, 0 },
+                },
+                true);
+            var res = GraphAlgoSet.BellmanFord(graph, vertices[0]);
+            Assert.True(res != null);
+            Assert.Equal(0, res[vertices[0]]);
+            Assert.Equal(2, res[vertices[1]]);
+            Assert.Equal(7, res[vertices[2]]);
+            Assert.Equal(-2, res[vertices[3]]);
+            Assert.Equal(4, res[vertices[4]]);
+        }
+
+        [Fact]
+        public void TestBellmanFordOnDirectedNegativeCyclicGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 6, 7, int.MaxValue, int.MaxValue },
+                    { int.MaxValue, 0, 8, -4, 5 },
+                    { int.MaxValue, int.MaxValue, 0, 9, -3 },
+                    { 2, int.MaxValue, int.MaxValue, 0, 7 },
+                    { int.MaxValue, -6, int.MaxValue, int.MaxValue, 0 },
+                },
+                true);
+            var res = GraphAlgoSet.BellmanFord(graph, vertices[0]);
+            Assert.Equal(res, null);
+        }
     }
 }

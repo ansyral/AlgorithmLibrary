@@ -138,6 +138,38 @@
             return res.ToImmutableList();
         }
 
+        // a general(no negative cycle) algo to get the shortest path from a node `s`.
+        public static ImmutableDictionary<Vertex<T>, int> BellmanFord<T>(IGraph<T> g, Vertex<T> s)
+        {
+            var res = new Dictionary<Vertex<T>, int>();
+            foreach (var v in g.Vertices)
+            {
+                res[v] = int.MaxValue;
+            }
+            res[s] = 0;
+            var edges = (from v in g.Vertices
+                         from e in g.EdgesFrom(v)
+                         select e).ToList();
+            for (int i = 0; i < g.Vertices.Count - 1; i++)
+            {
+                foreach (var e in edges)
+                {
+                    Relax(res, e);
+                }
+            }
+
+            // check negative cycle
+            foreach (var e in edges)
+            {
+                if (res[e.To] > res[e.From] + e.Weight)
+                {
+                    Console.WriteLine("Negative cycle existed.");
+                    return null;
+                }
+            }
+            return res.ToImmutableDictionary();
+        }
+
         private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit, bool breakWhenCyclic)
         {
             if (!reverseVisit)
@@ -212,6 +244,15 @@
             }
 
             Console.WriteLine($"Path: {string.Join("->", path)}");
+        }
+
+        private static void Relax<T>(Dictionary<Vertex<T>, int> res, Edge<T> e)
+        {
+            int cur = res[e.From] + e.Weight;
+            if (cur < res[e.To])
+            {
+                res[e.To] = cur;
+            }
         }
     }
 
