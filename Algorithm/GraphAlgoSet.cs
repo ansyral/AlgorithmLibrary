@@ -138,7 +138,13 @@
             return res.ToImmutableList();
         }
 
-        // a general(no negative cycle) algo to get the shortest path from a node `s`.
+        /// <summary>
+        /// A general(no negative cycle) algo to get the shortest path from a node `s`.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="g"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static ImmutableDictionary<Vertex<T>, long> BellmanFord<T>(IGraph<T> g, Vertex<T> s)
         {
             var res = new Dictionary<Vertex<T>, long>();
@@ -170,7 +176,13 @@
             return res.ToImmutableDictionary();
         }
 
-        // algo(no cycle, could allow for negative weight) to get shortest path from a node `s`
+        /// <summary>
+        /// algo(no cycle, could allow for negative weight) to get shortest path from a node `s`
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="g"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
         public static ImmutableDictionary<Vertex<T>, long> SingleSourceShortestPathWithTopologicalSort<T>(IGraph<T> g, Vertex<T> s)
         {
             if (!g.IsDirected)
@@ -200,6 +212,49 @@
             }
 
             return res.ToImmutableDictionary();
+        }
+
+        /// <summary>
+        /// Simple algo(only allow for positive weight, but could be cyclic) to get shortest path from a node `s`
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="g"></param>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static ImmutableDictionary<Vertex<T>, long> Dijkstra<T>(IGraph<T> g, Vertex<T> s)
+        {
+            // todo: wait for data structure [minimum priority queue]
+            throw new NotImplementedException("wait for data structure [minimum priority queue]");
+        }
+
+        /// <summary>
+        /// A generic(no negative cycle) algo to get the shortest path from each pair of vertice in the graph.
+        /// it uses Dynamic Programming. D[ij][k] means the shortest path from i to j with intermediate vertice between 0~k-1. D[ij][0] means no intermediate vertice.
+        /// it only works for graph that is represented as matrix.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public static long[,] FloydWarshall<T>(GraphWithAdjacentMatrix<T> g)
+        {
+            int len = g.Vertices.Count;
+            var D = new long[len, len];
+            Array.Copy(g.Matrix, D, len * len);
+            for (int k = 1; k <= len; k++)
+            {
+                for (int i = 0; i < len; i++)
+                {
+                    for (int j = 0; j < len; j++)
+                    {
+                        long throughK = D[i, k - 1] + D[k - 1, j];
+                        if (throughK < D[i, j])
+                        {
+                            D[i, j] = throughK;
+                        }
+                    }
+                }
+            }
+            return D;
         }
 
         private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit, bool breakWhenCyclic)

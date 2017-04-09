@@ -12,6 +12,8 @@
 
         public bool IsDirected { get; }
 
+        public int[,] Matrix { get { return _edges; } }
+
         public List<Edge<T>> EdgesFrom(Vertex<T> v)
         {
             int index = Vertices.IndexOf(v);

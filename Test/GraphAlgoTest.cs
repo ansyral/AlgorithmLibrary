@@ -583,5 +583,34 @@
             Assert.Equal(5, res[vertices[4]]);
             Assert.Equal(3, res[vertices[5]]);
         }
+
+        [Fact]
+        public void TestFloydWarshallOnDirectedGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 3, 8, int.MaxValue, -4 },
+                    { int.MaxValue, 0, int.MaxValue, 1, 7 },
+                    { int.MaxValue, 4, 0, int.MaxValue, int.MaxValue },
+                    { 2, int.MaxValue, -5, 0, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, int.MaxValue, 6, 0, },
+                },
+                true);
+            var res = GraphAlgoSet.FloydWarshall(graph);
+            Assert.True(res != null);
+            Assert.Equal(
+                new long[,]
+                {
+                    { 0, 1, -3, 2, -4 },
+                    { 3, 0, -4, 1, -1 },
+                    { 7, 4, 0, 5, 3 },
+                    { 2, -1, -5, 0, -2 },
+                    { 8, 5, 1, 6, 0 },
+                },
+                res);
+        }
     }
 }
