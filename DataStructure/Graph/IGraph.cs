@@ -11,5 +11,7 @@
         List<Edge<T>> EdgesTo(Vertex<T> v);
 
         bool IsDirected { get; }
+
+        IGraph<T> Transform();
     }
 }

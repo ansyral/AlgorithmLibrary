@@ -3,20 +3,21 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Linq;
 
     using XuanLibrary.DataStructure.Graph;
 
     public static class GraphAlgoSet
     {
         // Check circle, topological sort
-        public static ImmutableList<Vertex<T>> DFS<T>(IGraph<T> g, bool reverseVisit = false)
+        public static ImmutableList<Vertex<T>> DFS<T>(IGraph<T> g, bool reverseVisit = false, bool breakWhenCyclic = true)
         {
             var context = new TraverseContext<T>(g);
             foreach (var v in g.Vertices)
             {
                 if (context.GetVisitStatus(v) == VisitStatus.White)
                 {
-                    if (!DFS(g, v, context, reverseVisit))
+                    if (!DFS(g, v, context, reverseVisit, breakWhenCyclic) && breakWhenCyclic)
                     {
                         return null;
                     }
@@ -93,16 +94,58 @@
 
         public static ImmutableList<Vertex<T>> TopologicalSortWithDFS<T>(IGraph<T> g)
         {
-            return DFS(g, true);
+            if (!g.IsDirected)
+            {
+                throw new InvalidOperationException("Only directed graph support topological sort.");
+            }
+            return DFS(g, reverseVisit: true);
         }
 
-        private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit)
+        public static ImmutableList<ImmutableList<Vertex<T>>> GetStronglyConnectedComponents<T>(IGraph<T> g)
+        {
+            if (!g.IsDirected)
+            {
+                throw new InvalidOperationException("Only directed graph need to get *strongly* connected component.");
+            }
+
+            // get finish time by DFS(G)
+            var context = new TraverseContext<T>(g);
+            foreach (var v in g.Vertices)
+            {
+                if (context.GetVisitStatus(v) == VisitStatus.White)
+                {
+                    DFS(g, v, context, false, false);
+                }
+            }
+            var sorted = context.GetVerticesSortedByFinishTime(false);
+
+            var transformed = g.Transform();
+            var tcontext = new TraverseContext<T>(transformed);
+
+            // DFS(G^T) by finish time descending order.
+            var res = new List<ImmutableList<Vertex<T>>>();
+            int count = 0;
+            foreach (var v in sorted)
+            {
+                var tv = transformed.Vertices[v.Index];
+                if (tcontext.GetVisitStatus(tv) == VisitStatus.White)
+                {
+                    DFS(transformed, tv, tcontext, false, false);
+                    res.Add(tcontext.TraverseResult.Skip(count).ToImmutableList());
+                    count = tcontext.TraverseResult.Count;
+                }
+            }
+            return res.ToImmutableList();
+        }
+
+        private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit, bool breakWhenCyclic)
         {
             if (!reverseVisit)
             {
                 context.Visit(cur);
             }
             context.SetVisitStatus(cur, VisitStatus.Grey);
+            context.TrackingTime++;
             var parent = context.GetParent(cur);
             foreach (var edge in g.EdgesFrom(cur))
             {
@@ -114,16 +157,25 @@
                 var childStatus = context.GetVisitStatus(child);
                 if (childStatus != VisitStatus.Black)
                 {
+                    var temp = context.GetParent(child);
                     context.SetParent(child, cur);
                     if (childStatus == VisitStatus.Grey)
                     {
                         Console.WriteLine("Cycle checked:");
                         PrintPath(cur, cur, context);
-                        return false;
+                        if (breakWhenCyclic)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            context.SetParent(child, temp);
+                        }
                     }
                     else
                     {
-                        if (!DFS(g, child, context, reverseVisit))
+                        bool res = DFS(g, child, context, reverseVisit, breakWhenCyclic);
+                        if (!res && breakWhenCyclic)
                         {
                             return false;
                         }
@@ -131,6 +183,8 @@
                 }
             }
             context.SetVisitStatus(cur, VisitStatus.Black);
+            context.TrackingTime++;
+            context.SetFinishTime(cur);
             if (reverseVisit)
             {
                 context.Visit(cur, reverse: true);
@@ -173,10 +227,13 @@
         private Dictionary<Vertex<T>, int> _index;
         private VisitStatus[] _visited;
         private Vertex<T>[] _parent;
+        private int[] _finishTime;
 
         public int VertexCount { get; }
 
         public List<Vertex<T>> TraverseResult { get; }
+
+        public int TrackingTime { get; set; }
 
         public TraverseContext(IGraph<T> g)
         {
@@ -189,7 +246,9 @@
             }
             _visited = new VisitStatus[count];
             _parent = new Vertex<T>[count];
+            _finishTime = new int[count];
             TraverseResult = new List<Vertex<T>>();
+            TrackingTime = 0;
         }
 
         public void Visit(Vertex<T> v, bool reverse = false)
@@ -228,6 +287,36 @@
             _parent[i] = p;
         }
 
+        public int GetFinishTime(Vertex<T> v)
+        {
+            int i = GetIndex(v);
+            return _finishTime[i];
+        }
+
+        public void SetFinishTime(Vertex<T> v)
+        {
+            int i = GetIndex(v);
+            _finishTime[i] = TrackingTime;
+        }
+
+        public ImmutableList<VertexWithIndex<T>> GetVerticesSortedByFinishTime(bool ascending)
+        {
+            var reversedIndex = _index.ToDictionary(p => p.Value, p => p.Key);
+            var pairs = _finishTime.Select((x, i) => new KeyValuePair<int, VertexWithIndex<T>>(x, new VertexWithIndex<T>(i, reversedIndex[i])));
+            if (ascending)
+            {
+                return pairs.OrderBy(p => p.Key)
+                    .Select(p => p.Value)
+                    .ToImmutableList();
+            }
+            else
+            {
+                return pairs.OrderByDescending(p => p.Key)
+                    .Select(p => p.Value)
+                    .ToImmutableList();
+            }
+        }
+
         public int GetIndex(Vertex<T> v)
         {
             if (v == null)
@@ -240,6 +329,19 @@
                 throw new ArgumentException($"vertex {v} doesn't exist in the graph.");
             }
             return i;
+        }
+    }
+
+    internal class VertexWithIndex<T>
+    {
+        public Vertex<T> Vertex { get; set; }
+
+        public int Index { get; set; }
+
+        public VertexWithIndex(int index, Vertex<T> v)
+        {
+            Index = index;
+            Vertex = v;
         }
     }
 }

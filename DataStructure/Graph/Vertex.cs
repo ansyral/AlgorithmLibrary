@@ -8,5 +8,10 @@
         {
             Data = d;
         }
+
+        public Vertex<T> Clone()
+        {
+            return (Vertex<T>)this.MemberwiseClone();
+        }
     }
 }

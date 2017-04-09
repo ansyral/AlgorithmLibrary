@@ -36,6 +36,21 @@
                     select new Edge<T>() { From = Vertices[i], To = v, Weight = _edges[i, index] }).ToList();
         }
 
+        public IGraph<T> Transform()
+        {
+            var vertices = Vertices.Select(v => v.Clone()).ToList();
+            int len = Vertices.Count;
+            var edges = new int[len, len];
+            for (int i = 0; i < len; i++)
+            {
+                for (int j = 0; j < len; j++)
+                {
+                    edges[i, j] = _edges[j, i];
+                }
+            }
+            return new GraphWithAdjacentMatrix<T>(vertices, edges, IsDirected);
+        }
+
         public GraphWithAdjacentMatrix(List<Vertex<T>> vertices, int[,] edges, bool isDirected)
         {
             if (vertices == null)

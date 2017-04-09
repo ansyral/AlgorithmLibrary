@@ -339,5 +339,97 @@
             Assert.Equal(res2.Count, 4);
             Assert.Equal(string.Concat(res2.Select(r => r.Data)), "DABC");
         }
+
+        [Fact]
+        public void TestSCCOnDirectedCyclicGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[0], Weight = 1 },
+                    new Edge<char> { From = vertices[3], To = vertices[2], Weight = 1 },
+                },
+                true);
+            var res = GraphAlgoSet.GetStronglyConnectedComponents(graph);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 2);
+            var formatted = res.Select(r => string.Concat(r.Select(rr => rr.Data)));
+            Assert.Contains("ACB", formatted);
+            Assert.Contains("D", formatted);
+        }
+
+        [Fact]
+        public void TestSCCOnDirectedACyclicGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[0], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[3], To = vertices[2], Weight = 1 },
+                },
+                true);
+            var res = GraphAlgoSet.GetStronglyConnectedComponents(graph);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 4);
+            var formatted = res.Select(r => string.Concat(r.Select(rr => rr.Data)));
+            Assert.Contains("A", formatted);
+            Assert.Contains("B", formatted);
+            Assert.Contains("C", formatted);
+            Assert.Contains("D", formatted);
+        }
+
+        [Fact]
+        public void TestSCCOnDirectedCyclicGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 1, int.MaxValue, int.MaxValue },
+                    { int.MaxValue, 0, 1, int.MaxValue },
+                    { 1,int.MaxValue, 0, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, 1, 0 },
+                },
+                true);
+            var res = GraphAlgoSet.GetStronglyConnectedComponents(graph);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 2);
+            var formatted = res.Select(r => string.Concat(r.Select(rr => rr.Data)));
+            Assert.Contains("ACB", formatted);
+            Assert.Contains("D", formatted);
+        }
+
+        [Fact]
+        public void TestSCCOnDirectedACyclicGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 1, 1, int.MaxValue },
+                    { int.MaxValue, 0, 1, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, 0, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, 1, 0 },
+                },
+                true);
+            var res = GraphAlgoSet.GetStronglyConnectedComponents(graph);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 4);
+            var formatted = res.Select(r => string.Concat(r.Select(rr => rr.Data)));
+            Assert.Contains("A", formatted);
+            Assert.Contains("B", formatted);
+            Assert.Contains("C", formatted);
+            Assert.Contains("D", formatted);
+        }
     }
 }

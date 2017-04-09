@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class GraphWithAdjacentList<T> : IGraph<T>
     {
@@ -39,6 +40,15 @@
                 return adjacent;
             }
             return new List<Edge<T>>();
+        }
+
+        public IGraph<T> Transform()
+        {
+            var mapper = Vertices.ToDictionary(v => v, v => v.Clone());
+            var edges = (from e in _edges
+                         select new Edge<T> { From = mapper[e.To], To = mapper[e.From], Weight = e.Weight }).ToList();
+            return new GraphWithAdjacentList<T>((from v in Vertices
+                                                 select mapper[v]).ToList(), edges, IsDirected);
         }
 
         public GraphWithAdjacentList(bool isDirected)
