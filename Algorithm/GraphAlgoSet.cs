@@ -139,9 +139,9 @@
         }
 
         // a general(no negative cycle) algo to get the shortest path from a node `s`.
-        public static ImmutableDictionary<Vertex<T>, int> BellmanFord<T>(IGraph<T> g, Vertex<T> s)
+        public static ImmutableDictionary<Vertex<T>, long> BellmanFord<T>(IGraph<T> g, Vertex<T> s)
         {
-            var res = new Dictionary<Vertex<T>, int>();
+            var res = new Dictionary<Vertex<T>, long>();
             foreach (var v in g.Vertices)
             {
                 res[v] = int.MaxValue;
@@ -167,6 +167,38 @@
                     return null;
                 }
             }
+            return res.ToImmutableDictionary();
+        }
+
+        // algo(no cycle, could allow for negative weight) to get shortest path from a node `s`
+        public static ImmutableDictionary<Vertex<T>, long> SingleSourceShortestPathWithTopologicalSort<T>(IGraph<T> g, Vertex<T> s)
+        {
+            if (!g.IsDirected)
+            {
+                throw new InvalidOperationException("Only directed graph supports this algorithm");
+            }
+            var sorted = TopologicalSort(g);
+            if (sorted == null)
+            {
+                throw new InvalidOperationException("Only acyclic graph supports this algorithm");
+            }
+
+            // initialize
+            var res = new Dictionary<Vertex<T>, long>();
+            foreach (var v in sorted)
+            {
+                res[v] = int.MaxValue;
+            }
+            res[s] = 0;
+
+            foreach (var v in sorted)
+            {
+                foreach (var e in g.EdgesFrom(v))
+                {
+                    Relax(res, e);
+                }
+            }
+
             return res.ToImmutableDictionary();
         }
 
@@ -246,9 +278,10 @@
             Console.WriteLine($"Path: {string.Join("->", path)}");
         }
 
-        private static void Relax<T>(Dictionary<Vertex<T>, int> res, Edge<T> e)
+        // use long incase int.MaxValue + positive weight would overflow
+        private static void Relax<T>(Dictionary<Vertex<T>, long> res, Edge<T> e)
         {
-            int cur = res[e.From] + e.Weight;
+            long cur = res[e.From] + e.Weight;
             if (cur < res[e.To])
             {
                 res[e.To] = cur;

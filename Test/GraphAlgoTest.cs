@@ -527,5 +527,61 @@
             var res = GraphAlgoSet.BellmanFord(graph, vertices[0]);
             Assert.Equal(res, null);
         }
+
+        [Fact]
+        public void TestSSPTOnDirectedGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), new Vertex<char>('F'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 5 },
+                    new Edge<char> { From = vertices[0], To = vertices[2], Weight = 3 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 2 },
+                    new Edge<char> { From = vertices[1], To = vertices[3], Weight = 6 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 7 },
+                    new Edge<char> { From = vertices[2], To = vertices[4], Weight = 4 },
+                    new Edge<char> { From = vertices[2], To = vertices[5], Weight = 2 },
+                    new Edge<char> { From = vertices[3], To = vertices[4], Weight = -1 },
+                    new Edge<char> { From = vertices[3], To = vertices[5], Weight = 1 },
+                    new Edge<char> { From = vertices[4], To = vertices[5], Weight = -2 },
+                },
+                true);
+            var res = GraphAlgoSet.SingleSourceShortestPathWithTopologicalSort(graph, vertices[1]);
+            Assert.True(res != null);
+            Assert.Equal(int.MaxValue, res[vertices[0]]);
+            Assert.Equal(0, res[vertices[1]]);
+            Assert.Equal(2, res[vertices[2]]);
+            Assert.Equal(6, res[vertices[3]]);
+            Assert.Equal(5, res[vertices[4]]);
+            Assert.Equal(3, res[vertices[5]]);
+        }
+
+        [Fact]
+        public void TestSSPTOnDirectedGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), new Vertex<char>('F'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 5, 3, int.MaxValue, int.MaxValue, int.MaxValue },
+                    { int.MaxValue, 0, 2, 6, int.MaxValue, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, 0, 7, 4, 2 },
+                    { int.MaxValue, int.MaxValue, int.MaxValue, 0, -1, 1 },
+                    { int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, 0, -2 },
+                    { int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue, 0 },
+                },
+                true);
+            var res = GraphAlgoSet.SingleSourceShortestPathWithTopologicalSort(graph, vertices[1]);
+            Assert.True(res != null);
+            Assert.Equal(int.MaxValue, res[vertices[0]]);
+            Assert.Equal(0, res[vertices[1]]);
+            Assert.Equal(2, res[vertices[2]]);
+            Assert.Equal(6, res[vertices[3]]);
+            Assert.Equal(5, res[vertices[4]]);
+            Assert.Equal(3, res[vertices[5]]);
+        }
     }
 }
