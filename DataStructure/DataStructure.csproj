@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisjointSet\IDisjointSet.cs" />
     <Compile Include="Graph\Edge.cs" />
     <Compile Include="Graph\GraphWithAdjacentList.cs" />
     <Compile Include="Graph\GraphWithAdjacentMatrix.cs" />
@@ -47,5 +48,6 @@
     <Compile Include="Graph\Vertex.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
