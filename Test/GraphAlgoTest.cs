@@ -612,5 +612,104 @@
                 },
                 res);
         }
+
+        [Fact]
+        public void TestKruskalOnUnDirectedConnectedGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>>
+            {
+                new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'),
+                new Vertex<char>('E'), new Vertex<char>('F'), new Vertex<char>('G'), new Vertex<char>('H'),
+                new Vertex<char>('I'),
+            };
+            var edges = new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 4 },
+                    new Edge<char> { From = vertices[1], To = vertices[0], Weight = 4 },
+                    new Edge<char> { From = vertices[0], To = vertices[7], Weight = 8 },
+                    new Edge<char> { From = vertices[7], To = vertices[0], Weight = 8 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 8 },
+                    new Edge<char> { From = vertices[2], To = vertices[1], Weight = 8 },
+                    new Edge<char> { From = vertices[1], To = vertices[7], Weight = 11 },
+                    new Edge<char> { From = vertices[7], To = vertices[1], Weight = 11 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 7 },
+                    new Edge<char> { From = vertices[3], To = vertices[2], Weight = 7 },
+                    new Edge<char> { From = vertices[2], To = vertices[5], Weight = 4 },
+                    new Edge<char> { From = vertices[5], To = vertices[2], Weight = 4 },
+                    new Edge<char> { From = vertices[2], To = vertices[8], Weight = 2 },
+                    new Edge<char> { From = vertices[8], To = vertices[2], Weight = 2 },
+                    new Edge<char> { From = vertices[3], To = vertices[4], Weight = 9 },
+                    new Edge<char> { From = vertices[4], To = vertices[3], Weight = 9 },
+                    new Edge<char> { From = vertices[3], To = vertices[5], Weight = 14 },
+                    new Edge<char> { From = vertices[5], To = vertices[3], Weight = 14 },
+                    new Edge<char> { From = vertices[4], To = vertices[5], Weight = 10 },
+                    new Edge<char> { From = vertices[5], To = vertices[4], Weight = 10 },
+                    new Edge<char> { From = vertices[5], To = vertices[6], Weight = 2 },
+                    new Edge<char> { From = vertices[6], To = vertices[5], Weight = 2 },
+                    new Edge<char> { From = vertices[6], To = vertices[7], Weight = 1 },
+                    new Edge<char> { From = vertices[7], To = vertices[6], Weight = 1 },
+                    new Edge<char> { From = vertices[6], To = vertices[8], Weight = 6 },
+                    new Edge<char> { From = vertices[8], To = vertices[6], Weight = 6 },
+                    new Edge<char> { From = vertices[7], To = vertices[8], Weight = 7 },
+                    new Edge<char> { From = vertices[8], To = vertices[7], Weight = 7 },
+                };
+            var graph = new GraphWithAdjacentList<char>(vertices, edges, false);
+            var res = GraphAlgoSet.Kruskal(graph);
+            Assert.True(res != null);
+            Assert.Equal(
+                res,
+                new List<Edge<char>>
+                {
+                    edges[22],
+                    edges[12],
+                    edges[20],
+                    edges[0],
+                    edges[10],
+                    edges[8],
+                    edges[2],
+                    edges[14],
+                });
+        }
+
+        [Fact]
+        public void TestKruskalOnUnDirectedConnectedGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>>
+            {
+                new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'),
+                new Vertex<char>('E'), new Vertex<char>('F'), new Vertex<char>('G'), new Vertex<char>('H'),
+                new Vertex<char>('I'),
+            };
+            int M = int.MaxValue;
+            var edges = new int[,]
+                {
+                    { 0, 4, M, M, M,  M, M,  8, M },
+                    { 4, 0, 8, M, M,  M, M, 11, M },
+                    { M, 8, 0, 7, M,  4, M,  M, 2 },
+                    { M, M, 7, 0, 9, 14, M,  M, M },
+                    { M, M, M, 9, 0, 10, M,  M, M },
+                    { M, M, 4, 14,10, 0, 2,  M, M },
+                    { M, M, M, M, M,  2, 0,  1, 6 },
+                    { 8, 11,M, M, M,  M, 1,  0, 7 },
+                    { M, M, 2, M, M,  M, 6,  7, 0 }
+                };
+            var graph = new GraphWithAdjacentMatrix<char>(vertices, edges, false);
+            var res = GraphAlgoSet.Kruskal(graph);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 8);
+            Assert.Equal(
+                res.Select(r => string.Concat(r.From.Data, r.To.Data, r.Weight)),
+                new List<string>
+                {
+                    "GH1",
+                    "CI2",
+                    "FG2",
+                    "AB4",
+                    "CF4",
+                    "CD7",
+                    "AH8",
+                    "DE9",
+                });
+        }
     }
 }

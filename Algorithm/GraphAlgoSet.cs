@@ -5,6 +5,7 @@
     using System.Collections.Immutable;
     using System.Linq;
 
+    using XuanLibrary.DataStructure.DisjointSet;
     using XuanLibrary.DataStructure.Graph;
 
     public static class GraphAlgoSet
@@ -255,6 +256,47 @@
                 }
             }
             return D;
+        }
+
+        /// <summary>
+        /// minimum spanning tree algo using Kruskal
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public static ImmutableList<Edge<T>> Kruskal<T>(IGraph<T> g)
+        {
+            if (g.IsDirected)
+            {
+                throw new InvalidOperationException("Only undirected graph support minimum spanning tree.");
+            }
+            var res = new List<Edge<T>>();
+            int count = g.Vertices.Count;
+
+            // make set
+            var set = new DisjointSetForestsWithIndex();
+            set.MakeSet(count);
+
+            var edges = (from v in g.Vertices
+                         from e in g.EdgesFrom(v)
+                         orderby e.Weight
+                         select e).ToList();
+            foreach (var e in edges)
+            {
+                int from = g.Vertices.IndexOf(e.From);
+                int to = g.Vertices.IndexOf(e.To);
+                if (set.FindSet(from) != set.FindSet(to))
+                {
+                    res.Add(e);
+                    set.Union(from, to);
+                }
+            }
+            if (res.Count != count - 1)
+            {
+                Console.WriteLine("not a connected graph! couldn't generate minimum spanning tree.");
+                return null;
+            }
+            return res.ToImmutableList();
         }
 
         private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit, bool breakWhenCyclic)
