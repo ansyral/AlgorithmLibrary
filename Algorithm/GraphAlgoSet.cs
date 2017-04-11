@@ -140,6 +140,37 @@
         }
 
         /// <summary>
+        /// use disjoint set to get connected components for undirected graph
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public static ImmutableList<ImmutableList<Vertex<T>>> GetConnectedComponents<T>(IGraph<T> g)
+        {
+            if (g.IsDirected)
+            {
+                throw new InvalidOperationException("Only undirected graph support connected components.");
+            }
+            int count = g.Vertices.Count;
+            var set = new DisjointSetForestsWithIndex();
+            set.MakeSet(count);
+
+            var edges = (from v in g.Vertices
+                         from e in g.EdgesFrom(v)
+                         select e).ToList();
+            foreach (var e in edges)
+            {
+                set.Union(g.Vertices.IndexOf(e.From), g.Vertices.IndexOf(e.To));
+            }
+
+            return (from i in Enumerable.Range(0, count)
+                    let v = g.Vertices[i]
+                    let s = set.FindSet(i)
+                    group v by s into gr
+                    select gr.ToImmutableList()).ToImmutableList();
+        }
+
+        /// <summary>
         /// A general(no negative cycle) algo to get the shortest path from a node `s`.
         /// </summary>
         /// <typeparam name="T"></typeparam>

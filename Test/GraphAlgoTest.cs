@@ -711,5 +711,49 @@
                     "DE9",
                 });
         }
+
+        [Fact]
+        public void TestCCOnUnDirectedGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[0], Weight = 1 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[1], Weight = 1 },
+                },
+                false);
+            var res = GraphAlgoSet.GetConnectedComponents(graph);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 2);
+            var formatted = res.Select(r => string.Concat(r.Select(rr => rr.Data)));
+            Assert.Contains("ABC", formatted);
+            Assert.Contains("D", formatted);
+        }
+
+        [Fact]
+        public void TestCCOnUnDirectedGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 1, int.MaxValue, int.MaxValue },
+                    { 1, 0, 1, int.MaxValue },
+                    { int.MaxValue,1, 0, int.MaxValue },
+                    { int.MaxValue, int.MaxValue, int.MaxValue, 0 },
+                },
+                false);
+            var res = GraphAlgoSet.GetConnectedComponents(graph);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 2);
+            var formatted = res.Select(r => string.Concat(r.Select(rr => rr.Data)));
+            Assert.Contains("ABC", formatted);
+            Assert.Contains("D", formatted);
+        }
     }
 }
