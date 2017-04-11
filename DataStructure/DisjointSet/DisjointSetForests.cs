@@ -8,6 +8,11 @@
         private Dictionary<T, T> _parents = new Dictionary<T, T>();
         private Dictionary<T, int> _ranks = new Dictionary<T, int>();
 
+        /// <summary>
+        /// find the set
+        /// </summary>
+        /// <param name="x">element</param>
+        /// <returns>the representative of the set</returns>
         public T FindSet(T x)
         {
             if (x == null)
@@ -21,12 +26,21 @@
             return _parents[x];
         }
 
+        /// <summary>
+        /// make a set that contains an element
+        /// </summary>
+        /// <param name="x">element</param>
         public void MakeSet(T x)
         {
             _parents[x] = x;
             _ranks[x] = 0;
         }
 
+        /// <summary>
+        /// union two sets that two elements reside in
+        /// </summary>
+        /// <param name="x">an element</param>
+        /// <param name="y">another element</param>
         public void Union(T x, T y)
         {
             Link(FindSet(x), FindSet(y));
