@@ -45,7 +45,12 @@
         /// <param name="y">the index of another element</param>
         public void Union(int x, int y)
         {
-            Link(FindSet(x), FindSet(y));
+            int sx = FindSet(x);
+            int sy = FindSet(y);
+            if (sx != sy)
+            {
+                Link(sx, sy);
+            }
         }
 
         private void Link(int x, int y)

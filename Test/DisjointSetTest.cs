@@ -19,6 +19,7 @@
             list.MakeSet("jump");
             list.MakeSet("umpj");
             list.MakeSet("upmj");
+            list.Union("here", "here");
             list.Union("here", "hree");
             list.Union("heer", "ehre");
             list.Union("ehre", "eher");
@@ -47,6 +48,7 @@
             list.MakeSet("jump");
             list.MakeSet("umpj");
             list.MakeSet("upmj");
+            list.Union("here", "here");
             list.Union("here", "hree");
             list.Union("heer", "ehre");
             list.Union("ehre", "eher");
@@ -72,6 +74,7 @@
             };
             var list = new DisjointSetForestsWithIndex();
             list.MakeSet(8);
+            list.Union(0, 0);
             list.Union(0, 1);
             list.Union(2, 3);
             list.Union(3, 4);

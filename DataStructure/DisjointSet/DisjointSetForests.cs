@@ -43,7 +43,12 @@
         /// <param name="y">another element</param>
         public void Union(T x, T y)
         {
-            Link(FindSet(x), FindSet(y));
+            T sx = FindSet(x);
+            T sy = FindSet(y);
+            if (!sx.Equals(sy))
+            {
+                Link(sx, sy);
+            }
         }
 
         private void Link(T x, T y)
