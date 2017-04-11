@@ -49,6 +49,7 @@
     <Compile Include="Graph\GraphWithAdjacentMatrix.cs" />
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\Vertex.cs" />
+    <Compile Include="Heap\Heap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

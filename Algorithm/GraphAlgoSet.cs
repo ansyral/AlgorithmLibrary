@@ -330,6 +330,18 @@
             return res.ToImmutableList();
         }
 
+        /// <summary>
+        /// minimum spanning tree algo using Prim
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public static ImmutableList<Edge<T>> Prim<T>(IGraph<T> g)
+        {
+            // todo: wait for data structure [minimum priority queue]
+            throw new NotImplementedException("wait for data structure [minimum priority queue]");
+        }
+
         private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit, bool breakWhenCyclic)
         {
             if (!reverseVisit)
