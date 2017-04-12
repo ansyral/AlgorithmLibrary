@@ -50,6 +50,9 @@
     <Compile Include="Graph\IGraph.cs" />
     <Compile Include="Graph\Vertex.cs" />
     <Compile Include="Heap\Heap.cs" />
+    <Compile Include="Heap\MaxHeap.cs" />
+    <Compile Include="Heap\MinHeap.cs" />
+    <Compile Include="Heap\PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

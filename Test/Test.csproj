@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="DisjointSetTest.cs" />
     <Compile Include="GraphAlgoTest.cs" />
+    <Compile Include="HeapTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
