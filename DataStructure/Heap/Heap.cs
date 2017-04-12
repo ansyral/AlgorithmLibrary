@@ -15,7 +15,7 @@
         /// <summary>
         /// the array length
         /// </summary>
-        public int Length { get; }
+        public int Length { get; private set; }
 
         public IComparer<T> Comparer { get; }
 
@@ -41,13 +41,14 @@
             }
         }
 
-        public Heap(T[] array, IComparer<T> comparer = null, bool isMaxHeap = false)
+        public Heap(T[] array, IComparer<T> comparer = null, bool isMaxHeap = false, int? capacity = null)
         {
             Comparer = comparer ?? Comparer<T>.Default;
             IsMax = isMaxHeap;
-            Length = array.Length;
+            HeapSize = array.Length;
+            Length = capacity ?? HeapSize;
             _array = new T[Length];
-            Array.Copy(array, _array, Length);
+            Array.Copy(array, _array, HeapSize);
             BuildHeap();
         }
 
@@ -56,8 +57,7 @@
         /// </summary>
         public void BuildHeap()
         {
-            HeapSize = Length;
-            for (int i = HeapSize / 2; i >= 0; i--)
+            for (int i = HeapSize / 2 - 1; i >= 0; i--)
             {
                 Heapify(i);
             }
@@ -75,7 +75,7 @@
         public T Pop()
         {
             var ele = _array[0];
-            Swap(0, HeapSize - 1);
+            _array[0] = _array[HeapSize - 1];
             HeapSize--;
             Heapify(0);
             return ele;
@@ -83,7 +83,15 @@
 
         public void Push(T value)
         {
-
+            if (HeapSize == Length)
+            {
+                var temp = new T[2 * Length];
+                Array.Copy(_array, temp, Length);
+                _array = temp;
+                Length = 2 * Length;
+            }
+            _array[HeapSize++] = value;
+            Update(HeapSize - 1, value);
         }
 
         public void Update(int index, T v)
@@ -92,19 +100,19 @@
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            int compare = Comparer.Compare(_array[index], v);
-            if (compare == 0)
-            {
-                return;
-            }
-            if (IsMax && compare > 0 || !IsMax && compare < 0)
+            int compare = Compare(_array[index], v);
+            if (compare > 0)
             {
                 throw new InvalidOperationException("invaid update!");
             }
-            int parent = Parent(index);
-            while (parent >= 0)
+            _array[index] = v;
+            int i = index;
+            int parent = Parent(i);
+            while (parent >= 0 && Compare(_array[parent], _array[i]) < 0)
             {
-
+                Swap(parent, i);
+                i = parent;
+                parent = Parent(i);
             }
         }
 
@@ -163,7 +171,7 @@
             {
                 return -1;
             }
-            return index / 2;
+            return (index - 1) / 2;
         }
 
         /// <summary>
@@ -173,7 +181,7 @@
         /// <returns>-1 if left child doesn't exist</returns>
         public int LeftChild(int index)
         {
-            var l = index * 2;
+            var l = index * 2 + 1;
             if (l >= HeapSize)
             {
                 return -1;
@@ -188,7 +196,7 @@
         /// <returns>-1 if right child doesn't exist</returns>
         public int RightChild(int index)
         {
-            var r = index * 2 + 1;
+            var r = index * 2 + 2;
             if (r >= HeapSize)
             {
                 return -1;
@@ -203,15 +211,21 @@
             _array[b] = temp;
         }
 
-        private int GetMatched(int a, int b)
+        private int GetMatched(int ia, int ib)
         {
-            int dest = b;
-            int c = Comparer.Compare(_array[a], _array[b]);
-            if (IsMax && c > 0 || !IsMax && c < 0)
+            return Compare(_array[ia], _array[ib]) > 0 ? ia : ib;
+        }
+
+        private int Compare(T a, T b)
+        {
+            if (IsMax)
             {
-                dest = a;
+                return Comparer.Compare(a, b);
             }
-            return dest;
+            else
+            {
+                return -Comparer.Compare(a, b);
+            }
         }
     }
 }

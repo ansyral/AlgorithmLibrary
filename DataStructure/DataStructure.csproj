@@ -51,8 +51,9 @@
     <Compile Include="Graph\Vertex.cs" />
     <Compile Include="Heap\Heap.cs" />
     <Compile Include="Heap\MaxHeap.cs" />
+    <Compile Include="Heap\MaxPriorityQueue.cs" />
     <Compile Include="Heap\MinHeap.cs" />
-    <Compile Include="Heap\PriorityQueue.cs" />
+    <Compile Include="Heap\MinPriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
