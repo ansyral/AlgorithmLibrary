@@ -31,14 +31,14 @@
             return _heap.Pop();
         }
 
-        public void IncreaseKey(int i, T key)
+        public void IncreasePriority(int i, T value)
         {
-            _heap.Update(i, key);
+            _heap.Update(i, value);
         }
 
-        public void Insert(T key)
+        public void Insert(T value)
         {
-            _heap.Push(key);
+            _heap.Push(value);
         }
     }
 }

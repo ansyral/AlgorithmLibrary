@@ -59,7 +59,7 @@
             Assert.Equal(1, queue.Min());
             Assert.Equal(1, queue.ExtractMin());
             Assert.Equal(3, queue.ExtractMin());
-            queue.DecreaseKey(4, 0);
+            queue.DecreasePriority(4, 0);
             Assert.Equal(0, queue.Min());
             Assert.Equal(6, queue.Count);
         }

@@ -47,6 +47,10 @@
             IsMax = isMaxHeap;
             HeapSize = array.Length;
             Length = capacity ?? HeapSize;
+            if (Length < HeapSize)
+            {
+                Length = HeapSize;
+            }
             _array = new T[Length];
             Array.Copy(array, _array, HeapSize);
             BuildHeap();
