@@ -2,18 +2,18 @@
 {
     using System.Collections.Generic;
 
-    public class MinPriorityQueue<T>
+    public class MinPriorityQueue<T> : IMinPriorityQueue<T>
     {
-        private MinHeap<T> _heap;
+        private IHeap<T> _heap;
 
         public MinPriorityQueue(T[] array, IComparer<T> comparer = null)
         {
-            _heap = new MinHeap<T>(array, comparer);
+            _heap = HeapFactory.CreateMin<T>(array, comparer);
         }
 
         public MinPriorityQueue(T[] array, int capacity, IComparer<T> comparer = null)
         {
-            _heap = new MinHeap<T>(array, capacity, comparer);
+            _heap = HeapFactory.CreateMin<T>(array, comparer, capacity);
         }
 
         public int Count
@@ -29,11 +29,6 @@
         public T ExtractMin()
         {
             return _heap.Pop();
-        }
-
-        public void DecreasePriority(int i, T value)
-        {
-            _heap.Update(i, value);
         }
 
         public void Insert(T value)

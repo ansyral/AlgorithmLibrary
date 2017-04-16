@@ -2,18 +2,18 @@
 {
     using System.Collections.Generic;
 
-    public class MinPriorityQueueWithKey<TKey, TValue> where TValue : IHasKey<TKey>
+    public class MinPriorityQueue<TKey, TValue> : IMinPriorityQueue<TKey, TValue> where TValue : IHasKey<TKey>
     {
-        private MinHeap<TValue> _heap;
+        private IHeapWithKey<TKey, TValue> _heap;
 
-        public MinPriorityQueueWithKey(TValue[] array, IComparer<TValue> comparer = null)
+        public MinPriorityQueue(TValue[] array, IComparer<TValue> comparer = null)
         {
-            _heap = new MinHeap<TValue>(array, comparer);
+            _heap = HeapFactory.CreateMin<TKey, TValue>(array, comparer);
         }
 
-        public MinPriorityQueueWithKey(TValue[] array, int capacity, IComparer<TValue> comparer = null)
+        public MinPriorityQueue(TValue[] array, int capacity, IComparer<TValue> comparer = null)
         {
-            _heap = new MinHeap<TValue>(array, capacity, comparer);
+            _heap = HeapFactory.CreateMin<TKey, TValue>(array, comparer, capacity);
         }
 
         public int Count
@@ -33,25 +33,12 @@
 
         public void DecreasePriority(TKey key, TValue value)
         {
-            int index = GetValue(key);
-            _heap.Update(index, value);
+            _heap.Update(key, value);
         }
 
         public void Insert(TValue value)
         {
             _heap.Push(value);
-        }
-
-        public int GetValue(TKey key)
-        {
-            for (int i = 0; i < _heap.HeapSize; i++)
-            {
-                if (_heap[i].Key.Equals(key))
-                {
-                    return i;
-                }
-            }
-            return -1;
         }
     }
 }

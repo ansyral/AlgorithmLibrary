@@ -3,10 +3,27 @@
     using System;
     using System.Collections.Generic;
 
-    public class Heap<T>
+    public class Heap<T> : IHeap<T>
     {
         private T[] _array;
 
+        public bool IsMax { get; }
+
+        internal Heap(T[] array, IComparer<T> comparer = null, bool isMaxHeap = false, int? capacity = null)
+        {
+            Comparer = comparer ?? Comparer<T>.Default;
+            IsMax = isMaxHeap;
+            HeapSize = array.Length;
+            Length = capacity ?? HeapSize;
+            if (Length < HeapSize)
+            {
+                Length = HeapSize;
+            }
+            _array = new T[Length];
+            Array.Copy(array, _array, HeapSize);
+        }
+
+        #region IHeap members
         /// <summary>
         /// the elements count in the heap
         /// </summary>
@@ -19,9 +36,7 @@
 
         public IComparer<T> Comparer { get; }
 
-        public bool IsMax { get; }
-
-        public T this[int index]
+        public virtual T this[int index]
         {
             get
             {
@@ -41,32 +56,6 @@
             }
         }
 
-        public Heap(T[] array, IComparer<T> comparer = null, bool isMaxHeap = false, int? capacity = null)
-        {
-            Comparer = comparer ?? Comparer<T>.Default;
-            IsMax = isMaxHeap;
-            HeapSize = array.Length;
-            Length = capacity ?? HeapSize;
-            if (Length < HeapSize)
-            {
-                Length = HeapSize;
-            }
-            _array = new T[Length];
-            Array.Copy(array, _array, HeapSize);
-            BuildHeap();
-        }
-
-        /// <summary>
-        /// build a heap according to the comparer
-        /// </summary>
-        public void BuildHeap()
-        {
-            for (int i = HeapSize / 2 - 1; i >= 0; i--)
-            {
-                Heapify(i);
-            }
-        }
-
         public T Peek()
         {
             if (HeapSize == 0)
@@ -79,9 +68,9 @@
         public T Pop()
         {
             var ele = _array[0];
-            _array[0] = _array[HeapSize - 1];
+            this[0] = _array[HeapSize - 1];
             HeapSize--;
-            Heapify(0);
+            HeapifyDown(0);
             return ele;
         }
 
@@ -94,11 +83,32 @@
                 _array = temp;
                 Length = 2 * Length;
             }
-            _array[HeapSize++] = value;
+            this[HeapSize++] = value;
             Update(HeapSize - 1, value);
         }
 
-        public void Update(int index, T v)
+        public T[] Sort()
+        {
+            var cloned = Clone();
+            for (int i = cloned.Length - 1; i > 0; i--)
+            {
+                cloned.Swap(i, 0);
+                cloned.HeapSize--;
+                cloned.HeapifyDown(0);
+            }
+            return cloned._array;
+        }
+        #endregion
+
+        public Heap<T> Clone()
+        {
+            var cloned = (Heap<T>)this.MemberwiseClone();
+            cloned._array = new T[Length];
+            Array.Copy(_array, cloned._array, Length);
+            return cloned;
+        }
+
+        protected void Update(int index, T v)
         {
             if (index >= HeapSize)
             {
@@ -109,58 +119,68 @@
             {
                 throw new InvalidOperationException("invaid update!");
             }
-            _array[index] = v;
-            int i = index;
-            int parent = Parent(i);
-            while (parent >= 0 && Compare(_array[parent], _array[i]) < 0)
-            {
-                Swap(parent, i);
-                i = parent;
-                parent = Parent(i);
-            }
-        }
-
-        public T[] Sort()
-        {
-            var cloned = Clone();
-            for (int i = cloned.Length - 1; i > 0; i--)
-            {
-                cloned.Swap(i, 0);
-                cloned.HeapSize--;
-                cloned.Heapify(0);
-            }
-            return cloned._array;
-        }
-
-        public Heap<T> Clone()
-        {
-            var cloned = (Heap<T>)this.MemberwiseClone();
-            cloned._array = new T[Length];
-            Array.Copy(_array, cloned._array, Length);
-            return cloned;
+            this[index] = v;
+            HeapifyUp(index);
         }
 
         /// <summary>
-        /// the left child and right child are both heap, adjust root to make it a heap,too.
+        /// build a heap according to the comparer
+        /// </summary>
+        internal void BuildHeap()
+        {
+            for (int i = HeapSize / 2 - 1; i >= 0; i--)
+            {
+                HeapifyDown(i);
+            }
+        }
+
+        /// <summary>
+        /// the left child and right child are both heap, adjust root down to make it a heap,too.
         /// </summary>
         /// <param name="index">the element's index</param>
-        public void Heapify(int index)
+        private void HeapifyDown(int index)
         {
-            int left = LeftChild(index);
-            int right = RightChild(index);
-            if (left < 0 && right < 0)
+            T cur = _array[index];
+            int iter = index;
+            while (iter >= 0)
             {
-                return;
+                int left = LeftChild(iter);
+                int right = RightChild(iter);
+                int dest = GetMatched(left, right);
+                if (dest >= 0 && Compare(cur, _array[dest]) < 0)
+                {
+                    this[iter] = _array[dest];
+                    iter = dest;
+                }
+                else
+                {
+                    break;
+                }
             }
-            int dest = GetMatched(left, index);
-            if (right >= 0)
+            if (iter != index)
             {
-                dest = GetMatched(right, dest);
+                this[iter] = cur;
             }
-            if (dest != index)
+        }
+
+        /// <summary>
+        /// the subtree rooted in index is heap, adjust root up to make it a heap
+        /// </summary>
+        /// <param name="index"></param>
+        private void HeapifyUp(int index)
+        {
+            T cur = _array[index];
+            int i = index;
+            int parent = Parent(i);
+            while (parent >= 0 && Compare(_array[parent], cur) < 0)
             {
-                Swap(dest, index);
-                Heapify(dest);
+                this[i] = _array[parent];
+                i = parent;
+                parent = Parent(i);
+            }
+            if (i != index)
+            {
+                this[i] = cur;
             }
         }
 
@@ -169,7 +189,7 @@
         /// </summary>
         /// <param name="index">an element's index</param>
         /// <returns>-1 if parent doesn't exist</returns>
-        public int Parent(int index)
+        private int Parent(int index)
         {
             if (index == 0)
             {
@@ -183,7 +203,7 @@
         /// </summary>
         /// <param name="index">an element's index</param>
         /// <returns>-1 if left child doesn't exist</returns>
-        public int LeftChild(int index)
+        private int LeftChild(int index)
         {
             var l = index * 2 + 1;
             if (l >= HeapSize)
@@ -198,7 +218,7 @@
         /// </summary>
         /// <param name="index"></param>
         /// <returns>-1 if right child doesn't exist</returns>
-        public int RightChild(int index)
+        private int RightChild(int index)
         {
             var r = index * 2 + 2;
             if (r >= HeapSize)
@@ -211,12 +231,24 @@
         private void Swap(int a, int b)
         {
             T temp = _array[a];
-            _array[a] = _array[b];
-            _array[b] = temp;
+            this[a] = _array[b];
+            this[b] = temp;
         }
 
         private int GetMatched(int ia, int ib)
         {
+            if (ia < 0 && ib < 0)
+            {
+                return -1;
+            }
+            else if (ia < 0)
+            {
+                return ib;
+            }
+            else if (ib < 0)
+            {
+                return ia;
+            }
             return Compare(_array[ia], _array[ib]) > 0 ? ia : ib;
         }
 

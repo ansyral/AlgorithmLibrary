@@ -2,18 +2,18 @@
 {
     using System.Collections.Generic;
 
-    public class MaxPriorityQueue<T>
+    public class MaxPriorityQueue<T> : IMaxPriorityQueue<T>
     {
-        private MaxHeap<T> _heap;
+        private IHeap<T> _heap;
 
         public MaxPriorityQueue(T[] array, IComparer<T> comparer = null)
         {
-            _heap = new MaxHeap<T>(array, comparer);
+            _heap = HeapFactory.CreateMax<T>(array, comparer);
         }
 
         public MaxPriorityQueue(T[] array, int capacity, IComparer<T> comparer = null)
         {
-            _heap = new MaxHeap<T>(array, capacity, comparer);
+            _heap = HeapFactory.CreateMax<T>(array, comparer, capacity);
         }
 
         public int Count
@@ -29,11 +29,6 @@
         public T ExtractMax()
         {
             return _heap.Pop();
-        }
-
-        public void IncreasePriority(int i, T value)
-        {
-            _heap.Update(i, value);
         }
 
         public void Insert(T value)
