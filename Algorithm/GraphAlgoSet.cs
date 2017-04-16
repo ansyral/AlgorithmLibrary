@@ -358,11 +358,40 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="g"></param>
-        /// <returns></returns>
-        public static ImmutableList<Edge<T>> Prim<T>(IGraph<T> g)
+        /// <param name="s"></param>
+        /// <returns>the mapping between vertext and its parent</returns>
+        public static ImmutableDictionary<Vertex<T>, Vertex<T>> Prim<T>(IGraph<T> g, Vertex<T> s)
         {
-            // todo: wait for data structure [minimum priority queue]
-            throw new NotImplementedException("wait for data structure [minimum priority queue]");
+            if (g.IsDirected)
+            {
+                throw new InvalidOperationException("Only undirected graph support minimum spanning tree.");
+            }
+            var res = new Dictionary<Vertex<T>, Vertex<T>>();
+            var distances = (from v in g.Vertices
+                             let weight = v == s ? 0 : int.MaxValue
+                             select new VertexWithWeight<T>(weight, v)).ToDictionary(vw => vw.Key, vw => vw);
+            var queue = new MinPriorityQueue<Vertex<T>, VertexWithWeight<T>>(distances.Values.ToArray());
+            var visited = new HashSet<Vertex<T>>();
+            while (queue.Count > 0)
+            {
+                var min = queue.ExtractMin();
+                visited.Add(min.Key);
+                foreach (var e in g.EdgesFrom(min.Key))
+                {
+                    if (!visited.Contains(e.To))
+                    {
+                        long cur = e.Weight;
+                        var node = distances[e.To];
+                        if (cur < node.Weight)
+                        {
+                            node.Weight = cur;
+                            node.Parent = min.Key;
+                            queue.DecreasePriority(node.Key, node);
+                        }
+                    }
+                }
+            }
+            return distances.ToImmutableDictionary(p => p.Key, p => p.Value.Parent);
         }
 
         private static bool DFS<T>(IGraph<T> g, Vertex<T> cur, TraverseContext<T> context, bool reverseVisit, bool breakWhenCyclic)
@@ -456,6 +485,8 @@
             public Vertex<T> Key { get; set; }
 
             public long Weight { get; set; }
+
+            public Vertex<T> Parent { get; set; }
 
             public VertexWithWeight(long weight, Vertex<T> v)
             {

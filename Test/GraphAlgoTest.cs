@@ -808,5 +808,96 @@
             Assert.Equal(7, res[vertices[3]]);
             Assert.Equal(9, res[vertices[4]]);
         }
+
+        [Fact]
+        public void TestPrimOnUnDirectedConnectedGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>>
+            {
+                new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'),
+                new Vertex<char>('E'), new Vertex<char>('F'), new Vertex<char>('G'), new Vertex<char>('H'),
+                new Vertex<char>('I'),
+            };
+            var edges = new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 4 },
+                    new Edge<char> { From = vertices[1], To = vertices[0], Weight = 4 },
+                    new Edge<char> { From = vertices[0], To = vertices[7], Weight = 8 },
+                    new Edge<char> { From = vertices[7], To = vertices[0], Weight = 8 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 8 },
+                    new Edge<char> { From = vertices[2], To = vertices[1], Weight = 8 },
+                    new Edge<char> { From = vertices[1], To = vertices[7], Weight = 11 },
+                    new Edge<char> { From = vertices[7], To = vertices[1], Weight = 11 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 7 },
+                    new Edge<char> { From = vertices[3], To = vertices[2], Weight = 7 },
+                    new Edge<char> { From = vertices[2], To = vertices[5], Weight = 4 },
+                    new Edge<char> { From = vertices[5], To = vertices[2], Weight = 4 },
+                    new Edge<char> { From = vertices[2], To = vertices[8], Weight = 2 },
+                    new Edge<char> { From = vertices[8], To = vertices[2], Weight = 2 },
+                    new Edge<char> { From = vertices[3], To = vertices[4], Weight = 9 },
+                    new Edge<char> { From = vertices[4], To = vertices[3], Weight = 9 },
+                    new Edge<char> { From = vertices[3], To = vertices[5], Weight = 14 },
+                    new Edge<char> { From = vertices[5], To = vertices[3], Weight = 14 },
+                    new Edge<char> { From = vertices[4], To = vertices[5], Weight = 10 },
+                    new Edge<char> { From = vertices[5], To = vertices[4], Weight = 10 },
+                    new Edge<char> { From = vertices[5], To = vertices[6], Weight = 2 },
+                    new Edge<char> { From = vertices[6], To = vertices[5], Weight = 2 },
+                    new Edge<char> { From = vertices[6], To = vertices[7], Weight = 1 },
+                    new Edge<char> { From = vertices[7], To = vertices[6], Weight = 1 },
+                    new Edge<char> { From = vertices[6], To = vertices[8], Weight = 6 },
+                    new Edge<char> { From = vertices[8], To = vertices[6], Weight = 6 },
+                    new Edge<char> { From = vertices[7], To = vertices[8], Weight = 7 },
+                    new Edge<char> { From = vertices[8], To = vertices[7], Weight = 7 },
+                };
+            var graph = new GraphWithAdjacentList<char>(vertices, edges, false);
+            var res = GraphAlgoSet.Prim(graph, vertices[0]);
+            Assert.True(res != null);
+            Assert.Equal(res.Count, 9);
+            Assert.Equal(res[vertices[0]], null);
+            Assert.Equal(res[vertices[1]], vertices[0]);
+            Assert.Equal(res[vertices[2]], vertices[5]);
+            Assert.Equal(res[vertices[3]], vertices[2]);
+            Assert.Equal(res[vertices[4]], vertices[3]);
+            Assert.Equal(res[vertices[5]], vertices[6]);
+            Assert.Equal(res[vertices[6]], vertices[7]);
+            Assert.Equal(res[vertices[7]], vertices[0]);
+            Assert.Equal(res[vertices[8]], vertices[2]);
+        }
+
+        [Fact]
+        public void TestPrimOnUnDirectedConnectedGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>>
+            {
+                new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'),
+                new Vertex<char>('E'), new Vertex<char>('F'), new Vertex<char>('G'), new Vertex<char>('H'),
+                new Vertex<char>('I'),
+            };
+            int M = int.MaxValue;
+            var edges = new int[,]
+                {
+                    { 0, 4, M, M, M,  M, M,  8, M },
+                    { 4, 0, 8, M, M,  M, M, 11, M },
+                    { M, 8, 0, 7, M,  4, M,  M, 2 },
+                    { M, M, 7, 0, 9, 14, M,  M, M },
+                    { M, M, M, 9, 0, 10, M,  M, M },
+                    { M, M, 4, 14,10, 0, 2,  M, M },
+                    { M, M, M, M, M,  2, 0,  1, 6 },
+                    { 8, 11,M, M, M,  M, 1,  0, 7 },
+                    { M, M, 2, M, M,  M, 6,  7, 0 }
+                };
+            var graph = new GraphWithAdjacentMatrix<char>(vertices, edges, false);
+            var res = GraphAlgoSet.Prim(graph, vertices[0]);
+            Assert.Equal(res.Count, 9);
+            Assert.Equal(res[vertices[0]], null);
+            Assert.Equal(res[vertices[1]], vertices[0]);
+            Assert.Equal(res[vertices[2]], vertices[5]);
+            Assert.Equal(res[vertices[3]], vertices[2]);
+            Assert.Equal(res[vertices[4]], vertices[3]);
+            Assert.Equal(res[vertices[5]], vertices[6]);
+            Assert.Equal(res[vertices[6]], vertices[7]);
+            Assert.Equal(res[vertices[7]], vertices[0]);
+            Assert.Equal(res[vertices[8]], vertices[2]);
+        }
     }
 }
