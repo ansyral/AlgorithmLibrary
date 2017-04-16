@@ -7,6 +7,7 @@
 
     using XuanLibrary.DataStructure.DisjointSet;
     using XuanLibrary.DataStructure.Graph;
+    using XuanLibrary.DataStructure.Heap;
 
     public static class GraphAlgoSet
     {
@@ -255,8 +256,30 @@
         /// <returns></returns>
         public static ImmutableDictionary<Vertex<T>, long> Dijkstra<T>(IGraph<T> g, Vertex<T> s)
         {
-            // todo: wait for data structure [minimum priority queue]
-            throw new NotImplementedException("wait for data structure [minimum priority queue]");
+            var distances = (from v in g.Vertices
+                             let weight = v == s ? 0 : int.MaxValue
+                             select new VertexWithWeight<T>(weight, v)).ToDictionary(vw => vw.Key, vw => vw);
+            var queue = new MinPriorityQueue<Vertex<T>, VertexWithWeight<T>>(distances.Values.ToArray());
+            var visited = new HashSet<Vertex<T>>();
+            while (queue.Count > 0)
+            {
+                var min = queue.ExtractMin();
+                visited.Add(min.Key);
+                foreach (var e in g.EdgesFrom(min.Key))
+                {
+                    if (!visited.Contains(e.To))
+                    {
+                        long cur = min.Weight + e.Weight;
+                        var node = distances[e.To];
+                        if (cur < node.Weight)
+                        {
+                            node.Weight = cur;
+                            queue.DecreasePriority(node.Key, node);
+                        }
+                    }
+                }
+            }
+            return distances.ToImmutableDictionary(d => d.Key, d => d.Value.Weight);
         }
 
         /// <summary>
@@ -425,6 +448,36 @@
             if (cur < res[e.To])
             {
                 res[e.To] = cur;
+            }
+        }
+
+        private class VertexWithWeight<T> : IHasKey<Vertex<T>>, IComparable<VertexWithWeight<T>>
+        {
+            public Vertex<T> Key { get; set; }
+
+            public long Weight { get; set; }
+
+            public VertexWithWeight(long weight, Vertex<T> v)
+            {
+                Weight = weight;
+                Key = v;
+            }
+
+            public int CompareTo(VertexWithWeight<T> other)
+            {
+                if (this.Weight == int.MaxValue && other.Weight == int.MaxValue)
+                {
+                    return 0;
+                }
+                if (this.Weight == int.MaxValue)
+                {
+                    return 1;
+                }
+                if (other.Weight == int.MaxValue)
+                {
+                    return -1;
+                }
+                return (int)(this.Weight - other.Weight);
             }
         }
     }

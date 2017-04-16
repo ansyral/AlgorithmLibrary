@@ -21,10 +21,6 @@
                 {
                     throw new ArgumentOutOfRangeException(nameof(index));
                 }
-                if (base[index] != null)
-                {
-                    _keyIndex[base[index].Key] = -1;
-                }
                 base[index] = value;
                 if (value != null)
                 {
@@ -42,7 +38,7 @@
         public void Update(TKey key, TValue value)
         {
             int index;
-            if (!_keyIndex.TryGetValue(key, out index))
+            if (!_keyIndex.TryGetValue(key, out index) || !key.Equals(this[index].Key))
             {
                 throw new ArgumentException($"Key {key} doesn't exist in the heap.");
             }

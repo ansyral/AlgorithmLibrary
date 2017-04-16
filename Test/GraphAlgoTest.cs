@@ -755,5 +755,58 @@
             Assert.Contains("ABC", formatted);
             Assert.Contains("D", formatted);
         }
+
+        [Fact]
+        public void TestDijkstraOnDirectedGraphWithAdjacentList()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), };
+            var graph = new GraphWithAdjacentList<char>(
+                vertices,
+                new List<Edge<char>>
+                {
+                    new Edge<char> { From = vertices[0], To = vertices[1], Weight = 10 },
+                    new Edge<char> { From = vertices[0], To = vertices[2], Weight = 5 },
+                    new Edge<char> { From = vertices[1], To = vertices[2], Weight = 2 },
+                    new Edge<char> { From = vertices[1], To = vertices[4], Weight = 1 },
+                    new Edge<char> { From = vertices[2], To = vertices[1], Weight = 3 },
+                    new Edge<char> { From = vertices[2], To = vertices[3], Weight = 2 },
+                    new Edge<char> { From = vertices[2], To = vertices[4], Weight = 9 },
+                    new Edge<char> { From = vertices[3], To = vertices[0], Weight = 7 },
+                    new Edge<char> { From = vertices[3], To = vertices[4], Weight = 6 },
+                    new Edge<char> { From = vertices[4], To = vertices[3], Weight = 4 },
+                },
+                true);
+            var res = GraphAlgoSet.Dijkstra(graph, vertices[0]);
+            Assert.True(res != null);
+            Assert.Equal(0, res[vertices[0]]);
+            Assert.Equal(8, res[vertices[1]]);
+            Assert.Equal(5, res[vertices[2]]);
+            Assert.Equal(7, res[vertices[3]]);
+            Assert.Equal(9, res[vertices[4]]);
+        }
+
+        [Fact]
+        public void TestDijkstraOnDirectedGraphWithAdjacentMatrix()
+        {
+            var vertices = new List<Vertex<char>> { new Vertex<char>('A'), new Vertex<char>('B'), new Vertex<char>('C'), new Vertex<char>('D'), new Vertex<char>('E'), };
+            var graph = new GraphWithAdjacentMatrix<char>(
+                vertices,
+                new int[,]
+                {
+                    { 0, 10, 5, int.MaxValue, int.MaxValue },
+                    { int.MaxValue, 0, 2, int.MaxValue, 1 },
+                    { int.MaxValue, 3, 0, 2, 9 },
+                    { 7, int.MaxValue, int.MaxValue, 0, 6 },
+                    { int.MaxValue, int.MaxValue, int.MaxValue, 4, 0 },
+                },
+                true);
+            var res = GraphAlgoSet.Dijkstra(graph, vertices[0]);
+            Assert.True(res != null);
+            Assert.Equal(0, res[vertices[0]]);
+            Assert.Equal(8, res[vertices[1]]);
+            Assert.Equal(5, res[vertices[2]]);
+            Assert.Equal(7, res[vertices[3]]);
+            Assert.Equal(9, res[vertices[4]]);
+        }
     }
 }
