@@ -19,7 +19,40 @@
             else
             {
                 Root = From(nodes[0]);
-                BuildTree(Root, 0, nodes);
+                if (Root != null)
+                {
+                    var queue = new Queue<TreeNodeWithParent<T>>();
+                    queue.Enqueue(Root);
+                    BuildTree(queue, nodes, 1);
+                }
+            }
+        }
+
+        private void BuildTree(Queue<TreeNodeWithParent<T>> queue, T[] nodes, int i)
+        {
+            while (queue.Count > 0)
+            {
+                var cur = queue.Dequeue();
+                if (i >= nodes.Length)
+                {
+                    break;
+                }
+                cur.Left = From(nodes[i++]);
+                if (i >= nodes.Length)
+                {
+                    break;
+                }
+                cur.Right = From(nodes[i++]);
+                if (cur.Left != null)
+                {
+                    queue.Enqueue(cur.Left);
+                    cur.Left.Parent = cur;
+                }
+                if (cur.Right != null)
+                {
+                    queue.Enqueue(cur.Right);
+                    cur.Right.Parent = cur;
+                }
             }
         }
 
@@ -184,25 +217,6 @@
                 deleted.Parent.Right = child;
             }
             return deleted;
-        }
-
-        private TreeNodeWithParent<T> BuildTree(TreeNodeWithParent<T> cur, int index, T[] nodes)
-        {
-            if (cur == null)
-            {
-                return null;
-            }
-            if (2 * index + 1 < nodes.Length)
-            {
-                cur.Left = BuildTree(From(nodes[2 * index + 1]), 2 * index + 1, nodes);
-                cur.Left.Parent = cur;
-            }
-            if (2 * index + 2 < nodes.Length)
-            {
-                cur.Right = BuildTree(From(nodes[2 * index + 2]), 2 * index + 2, nodes);
-                cur.Right.Parent = cur;
-            }
-            return cur;
         }
 
         private TreeNodeWithParent<T> From(T value)

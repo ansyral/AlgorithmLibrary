@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BSTreeTest.cs" />
     <Compile Include="DisjointSetTest.cs" />
     <Compile Include="GraphAlgoTest.cs" />
     <Compile Include="HeapTest.cs" />
