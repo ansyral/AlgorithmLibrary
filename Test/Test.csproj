@@ -68,6 +68,7 @@
     <Compile Include="GraphAlgoTest.cs" />
     <Compile Include="HeapTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickSortAlgoTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
