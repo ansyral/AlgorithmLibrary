@@ -66,6 +66,7 @@
     <Compile Include="BSTreeTest.cs" />
     <Compile Include="DisjointSetTest.cs" />
     <Compile Include="GraphAlgoTest.cs" />
+    <Compile Include="HeapSortAlgoTest.cs" />
     <Compile Include="HeapTest.cs" />
     <Compile Include="MergeSortAlgoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

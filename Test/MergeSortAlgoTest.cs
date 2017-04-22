@@ -22,7 +22,7 @@
         [InlineData(
             new int[] { 8, 7, 6, 5, 1, 2, 3, 4 },
             new int[] { 1, 2, 3, 4, 5, 6, 7, 8 })]
-        public void TestMergeSortLastAsPivotBasic(int[] source, int[] expected)
+        public void TestMergeSortBasic(int[] source, int[] expected)
         {
             MergeSort.SortRecursive(source);
             Assert.Equal(
