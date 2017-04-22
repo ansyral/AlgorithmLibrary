@@ -51,7 +51,7 @@
     <Compile Include="Graph\Vertex.cs" />
     <Compile Include="Heap\Heap.cs" />
     <Compile Include="Heap\HeapFactory.cs" />
-    <Compile Include="Heap\IHasKey.cs" />
+    <Compile Include="Common\IHasKey.cs" />
     <Compile Include="Heap\HeapWithKey.cs" />
     <Compile Include="Heap\IHeap.cs" />
     <Compile Include="Heap\IHeapWithKey.cs" />

@@ -1,6 +1,7 @@
 ﻿namespace XuanLibrary.Test
 {
     using System;
+    using XuanLibrary.DataStructure.Common;
     using XuanLibrary.DataStructure.Heap;
 
     using Xunit;

@@ -69,6 +69,7 @@
     <Compile Include="HeapSortAlgoTest.cs" />
     <Compile Include="HeapTest.cs" />
     <Compile Include="MergeSortAlgoTest.cs" />
+    <Compile Include="NonComparableSortAlgoTest.cs" />
     <Compile Include="OnSquareSortAlgoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickSortAlgoTest.cs" />

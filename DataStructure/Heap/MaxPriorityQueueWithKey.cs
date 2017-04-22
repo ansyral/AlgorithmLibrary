@@ -1,6 +1,7 @@
 ﻿namespace XuanLibrary.DataStructure.Heap
 {
     using System.Collections.Generic;
+    using XuanLibrary.DataStructure.Common;
 
     public class MaxPriorityQueue<TKey, TValue> : IMaxPriorityQueue<TKey, TValue> where TValue : IHasKey<TKey>
     {

@@ -5,6 +5,7 @@
     using System.Collections.Immutable;
     using System.Linq;
 
+    using XuanLibrary.DataStructure.Common;
     using XuanLibrary.DataStructure.DisjointSet;
     using XuanLibrary.DataStructure.Graph;
     using XuanLibrary.DataStructure.Heap;

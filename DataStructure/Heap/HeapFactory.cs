@@ -1,6 +1,7 @@
 ﻿namespace XuanLibrary.DataStructure.Heap
 {
     using System.Collections.Generic;
+    using XuanLibrary.DataStructure.Common;
 
     public static class HeapFactory
     {

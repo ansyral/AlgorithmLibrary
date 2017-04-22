@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using XuanLibrary.DataStructure.Common;
+
     // refered https://ezekiel.encs.vancouver.wsu.edu/~cs223/projects/dijkstra-priority-queue/dijkstra-priority-queue.pdf
     public class Heap<TKey, TValue> : Heap<TValue>, IHeapWithKey<TKey, TValue> where TValue : IHasKey<TKey>
     {

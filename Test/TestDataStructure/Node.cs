@@ -1,17 +1,18 @@
 ﻿namespace XuanLibrary.Test.TestDataStructure
 {
     using System;
+    using XuanLibrary.DataStructure.Common;
 
-    internal class Node : IComparable<Node>, IEquatable<Node>
+    internal class Node : IComparable<Node>, IEquatable<Node>, IHasKey<int>
     {
         public string Name { get; set; }
 
-        public int Value { get; set; }
+        public int Key { get; set; }
 
-        public Node(string name, int val)
+        public Node(string name, int key)
         {
             Name = name;
-            Value = val;
+            Key = key;
         }
 
         public static explicit operator Node(string str)
@@ -22,7 +23,7 @@
 
         public int CompareTo(Node other)
         {
-            return this.Value - other.Value;
+            return this.Key - other.Key;
         }
 
         public bool Equals(Node other)
@@ -35,7 +36,7 @@
             {
                 return true;
             }
-            return Name == other.Name && Value == other.Value;
+            return Name == other.Name && Key == other.Key;
         }
 
         public override bool Equals(object obj)
@@ -45,7 +46,7 @@
 
         public override int GetHashCode()
         {
-            return Name.GetHashCode() ^ (Value.GetHashCode() << 1);
+            return Name.GetHashCode() ^ (Key.GetHashCode() << 1);
         }
     }
 }

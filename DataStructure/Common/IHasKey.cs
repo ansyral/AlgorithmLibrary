@@ -1,4 +1,4 @@
-﻿namespace XuanLibrary.DataStructure.Heap
+﻿namespace XuanLibrary.DataStructure.Common
 {
     public interface IHasKey<T>
     {
