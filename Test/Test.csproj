@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4C05A7ED-75C0-466C-9353-0FB7D06100FF}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>XuanLibrary</RootNamespace>
-    <AssemblyName>XuanLibrary</AssemblyName>
+    <RootNamespace>XuanLibrary.Test</RootNamespace>
+    <AssemblyName>XuanLibrary.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -67,8 +67,10 @@
     <Compile Include="DisjointSetTest.cs" />
     <Compile Include="GraphAlgoTest.cs" />
     <Compile Include="HeapTest.cs" />
+    <Compile Include="MergeSortAlgoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickSortAlgoTest.cs" />
+    <Compile Include="TestDataStructure\Node.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

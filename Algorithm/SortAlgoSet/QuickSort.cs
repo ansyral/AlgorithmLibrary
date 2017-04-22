@@ -6,7 +6,7 @@
     public static class QuickSort
     {
         /// <summary>
-        /// notstable, use PartitionLastAsPivot.(87183564)
+        /// notstable(swap elements,hard to keep stable), inplace, use PartitionLastAsPivot.(87183564)
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
