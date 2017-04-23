@@ -1,6 +1,8 @@
 ﻿namespace XuanLibrary.Algorithm.SortAlgoSet
 {
     using System;
+    using System.Collections.Generic;
+
     using XuanLibrary.DataStructure.Common;
 
     /// <summary>
@@ -56,6 +58,61 @@
                 count[array[i]]--;
             }
             Array.Copy(sorted, array, array.Length);
+        }
+
+        /// <summary>
+        /// stable sort
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="k">the upper bound of array's value, namely [0, k). we would use k buckets here.</param>
+        public static void BucketSort<T>(T[] array, int k) where T : IHasKey<int>
+        {
+            List<T>[] buckets = new List<T>[k];
+            for (int i = 0; i < k; i++)
+            {
+                buckets[i] = new List<T>();
+            }
+            for (int i = 0; i < array.Length; i++)
+            {
+                buckets[array[i].Key].Add(array[i]);
+            }
+            int index = 0;
+            for (int i = 0; i < k; i++)
+            {
+                for (int j = 0; j < buckets[i].Count; j++)
+                {
+                    array[index + j] = buckets[i][j];
+                }
+                index += buckets[i].Count;
+            }
+        }
+
+        /// <summary>
+        /// int version
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="k"></param>
+        public static void BucketSort(int[] array, int k)
+        {
+            List<int>[] buckets = new List<int>[k];
+            for (int i = 0; i < k; i++)
+            {
+                buckets[i] = new List<int>();
+            }
+            for (int i = 0; i < array.Length; i++)
+            {
+                buckets[array[i]].Add(array[i]);
+            }
+            int index = 0;
+            for (int i = 0; i < k; i++)
+            {
+                for (int j = 0; j < buckets[i].Count; j++)
+                {
+                    array[index + j] = buckets[i][j];
+                }
+                index += buckets[i].Count;
+            }
         }
     }
 }
