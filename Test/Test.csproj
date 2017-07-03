@@ -38,6 +38,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
@@ -63,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AmbientConfigurationTest.cs" />
     <Compile Include="BSTreeTest.cs" />
     <Compile Include="DisjointSetTest.cs" />
     <Compile Include="GraphAlgoTest.cs" />
@@ -78,6 +82,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="TestData\worker.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Algorithm\Algorithm.csproj">
@@ -87,6 +94,14 @@
     <ProjectReference Include="..\DataStructure\DataStructure.csproj">
       <Project>{2fca105b-c3f6-4b82-8350-724cee394d4e}</Project>
       <Name>DataStructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fx\AmbientConfiguration\AmbientConfiguration.csproj">
+      <Project>{d475f12c-6c6e-4881-9c90-163cac11fbc3}</Project>
+      <Name>AmbientConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fx\Utility\Utility.csproj">
+      <Project>{58467923-b066-4e8b-adf3-04c63cc50bc2}</Project>
+      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

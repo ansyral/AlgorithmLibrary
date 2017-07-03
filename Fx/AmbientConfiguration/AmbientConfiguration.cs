@@ -50,7 +50,7 @@
             return new AmbientConfiguration(this);
         }
 
-        public AmbientConfigurationEntry<T> CreateItem<T>(string key, T defaultValue, Func<object, T> converter, bool silent)
+        public AmbientConfigurationEntry<T> CreateEntry<T>(string key, T defaultValue, Func<object, T> converter, bool silent)
         {
             if (key == null)
             {
@@ -89,7 +89,7 @@
                             return;
                         }
                         _configurationStr = configurationStr;
-                        var traits = JsonUtility.Deserialize<IReadOnlyDictionary<string, object>>(_configurationStr);
+                        var traits = JsonUtility.FromJsonString<IReadOnlyDictionary<string, object>>(_configurationStr);
                         if (traits == null)
                         {
                             throw new InvalidOperationException("The configuration string is not a valid JSON dictionary.");
@@ -101,7 +101,8 @@
                 object refreshIntervalMilliseconds = null;
                 if (Value.TryGetValue(ConfigKey_RefreshInterval, out refreshIntervalMilliseconds))
                 {
-                    int interval = (int)refreshIntervalMilliseconds;
+                    // JSON.NET assuming number is of type long (int64) not integer (int32)
+                    long interval = (long)refreshIntervalMilliseconds;
                     _timer.Change(interval, interval);
                 }
                 else
@@ -154,32 +155,32 @@
 
 
         #region IReadOnlyDictionary
-        public object this[string key] => throw new NotImplementedException();
+        public object this[string key] => Value[key];
 
-        public IEnumerable<string> Keys => throw new NotImplementedException();
+        public IEnumerable<string> Keys => Value.Keys;
 
-        public IEnumerable<object> Values => throw new NotImplementedException();
+        public IEnumerable<object> Values => Value.Values;
 
-        public int Count => throw new NotImplementedException();
+        public int Count => Value.Count;
 
         public bool ContainsKey(string key)
         {
-            throw new NotImplementedException();
+            return Value.ContainsKey(key);
         }
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return Value.GetEnumerator();
         }
 
         public bool TryGetValue(string key, out object value)
         {
-            throw new NotImplementedException();
+            return Value.TryGetValue(key, out value);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return Value.GetEnumerator();
         }
         #endregion
     }

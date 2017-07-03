@@ -1,0 +1,6 @@
+﻿{
+  "refresh_interval_milliseconds": 1000,
+  "StorageConnectionString": "<SecretAmbientConfiguration:w1s0rdEcGQAzx6L4Rpbvqg==:SecretAmbientConfiguration>",
+  "Accessor": "Build.DataAccessor.Local.Accessor",
+  "QueueDefaultMaxMessageCount": 400
+}

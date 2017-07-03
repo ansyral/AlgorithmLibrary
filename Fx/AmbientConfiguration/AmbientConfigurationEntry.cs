@@ -68,5 +68,15 @@
                 }
             }
         }
+
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
+
+        public static implicit operator T(AmbientConfigurationEntry<T> entry)
+        {
+            return entry.Value;
+        }
     }
 }
