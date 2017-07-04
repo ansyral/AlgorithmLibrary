@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Fx\Utility\Utili
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientContext", "Fx\AmbientContext\AmbientContext.csproj", "{C76CB0FE-6941-4B69-BF09-FB8576D9E00A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing", "Fx\Tracing\Tracing.csproj", "{A6BCACDD-D586-4FE3-8923-A869D412AA49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{C76CB0FE-6941-4B69-BF09-FB8576D9E00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C76CB0FE-6941-4B69-BF09-FB8576D9E00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C76CB0FE-6941-4B69-BF09-FB8576D9E00A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6BCACDD-D586-4FE3-8923-A869D412AA49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6BCACDD-D586-4FE3-8923-A869D412AA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6BCACDD-D586-4FE3-8923-A869D412AA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6BCACDD-D586-4FE3-8923-A869D412AA49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
