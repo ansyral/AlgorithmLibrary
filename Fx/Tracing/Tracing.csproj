@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RollingFileListener.cs" />
     <Compile Include="TraceExt.cs" />
     <Compile Include="TracingItem.cs" />
     <Compile Include="TracingScope.cs" />
