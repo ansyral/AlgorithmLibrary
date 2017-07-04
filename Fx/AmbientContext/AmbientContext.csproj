@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="AmbientContextCrossServices.cs" />
     <Compile Include="AmbientContextFlow.cs" />
-    <Compile Include="AmbientContextInwardService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj">

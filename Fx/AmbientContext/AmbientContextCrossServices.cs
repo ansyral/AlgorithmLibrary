@@ -12,8 +12,8 @@
 
     /// <summary>
     /// AmbientContext that is designed to cross services like flowing through http calls by use of http headers.
-    /// For each service, it would only contain one AmbientContext, so logs in a service would share the same prefix, say "A.B.C", namely log ids are like "A.B.C.100", "A.B.C.5000"
-    /// code inside the service could access it by `AmbientContextCrossService.TryGetCurrent()`.
+    /// when current is null, GetOrCreateCurrent() method would return a different context(Guid.NewGuid correlationid) for each thread
+    /// each thread could access its current context by `AmbientContextCrossService.TryGetCurrent()`.
     /// </summary>
     public class AmbientContextCrossServices : ConcurrentDictionary<string, object>, IDisposable
     {
@@ -61,6 +61,7 @@
 
         public static AmbientContextCrossServices GetOrCreateCurrent()
         {
+            // no thread safety issue here because the CallContext's data slot is set in the current thread and flows *into* child threads.
             var context = TryGetCurrent();
             if (context == null)
             {
@@ -81,7 +82,14 @@
 
         public static AmbientContextCrossServices Initialize(string serializedJson)
         {
-            var context = string.IsNullOrEmpty(serializedJson) ? new AmbientContextCrossServices() : new AmbientContextCrossServices(serializedJson);
+            var context = TryGetCurrent();
+
+            // no thread safety issue here because the CallContext's data slot is set in the current thread and flows *into* child threads.
+            if (context != null)
+            {
+                throw new InvalidOperationException("Cannot initialize an ambient context because it has already been initialized.");
+            }
+            context = string.IsNullOrEmpty(serializedJson) ? new AmbientContextCrossServices() : new AmbientContextCrossServices(serializedJson);
             var bitArray = new BitArray(0);
             WrapperField.SetValue(bitArray, context);
             CallContext.LogicalSetData(AMBIENT_CONTEXT, bitArray);
