@@ -44,13 +44,13 @@
             {
                 // Try Azure first
                 configurationValue = RoleEnvironment.GetConfigurationSettingValue(configurationName);
-                Console.WriteLine($"Get configuration {configurationName}: {configurationValue} from Azure configuration.");
+                TraceExt.TraceInfo($"Get configuration {configurationName}: {configurationValue} from Azure configuration.", null);
             }
             catch
             {
                 // Fall back to config file
                 configurationValue = ConfigurationManager.AppSettings[configurationName];
-                Console.WriteLine($"Get configuration {configurationName}: {configurationValue} from local configuration file.");
+                TraceExt.TraceInfo($"Get configuration {configurationName}: {configurationValue} from local configuration file.", null);
             }
 
             return configurationValue;

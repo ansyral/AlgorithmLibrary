@@ -54,6 +54,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tracing\Tracing.csproj">
+      <Project>{a6bcacdd-d586-4fe3-8923-a869d412aa49}</Project>
+      <Name>Tracing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{58467923-b066-4e8b-adf3-04c63cc50bc2}</Project>
       <Name>Utility</Name>

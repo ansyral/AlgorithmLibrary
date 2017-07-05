@@ -37,9 +37,8 @@
             object value;
             if (!ac.TryGetValue(Key, out value))
             {
-                // to-do, use tracer
                 string message = $"Cannot find key {Key} in configuration!";
-                Console.WriteLine(message);
+                TraceExt.TraceError(message, null);
                 if (!silent)
                 {
                     throw new KeyNotFoundException(message);
@@ -51,7 +50,7 @@
                 T typedValue = _converter != null ? _converter(value) : (T)value;
                 if (!object.Equals(Value, typedValue))
                 {
-                    Console.WriteLine($"Configuration '{Key}' is changed from '{Value}' to '{typedValue}'.");
+                    TraceExt.TraceInfo($"Configuration '{Key}' is changed from '{Value}' to '{typedValue}'.", null);
                     Value = typedValue;
                     if (OnChanged != null)
                     {
@@ -59,9 +58,9 @@
                     }
                 }
             }
-            catch (InvalidCastException)
+            catch (InvalidCastException ex)
             {
-                Console.WriteLine($"Cannot cast value '{value}' to type '{typeof(T)}', original value is kept.");
+                TraceExt.TraceError($"Cannot cast value '{value}' to type '{typeof(T)}', original value is kept.", ex);
                 if (!silent)
                 {
                     throw;

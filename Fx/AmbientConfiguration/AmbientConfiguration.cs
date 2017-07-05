@@ -118,7 +118,7 @@
             }
             catch (Exception ex)
             {
-                // TODO: tracer
+                TraceExt.TraceError($"Failed to refresh ambient configuration, details: {ex.Message}.", ex);
                 if (silent)
                 {
                     var wex = ex as WebException;
