@@ -73,6 +73,12 @@
             Trace.TraceInformation(JsonUtility.ToJsonString(item));
         }
 
+        // have to call the method explicitly as listener won't get disposed even when appplication is closed
+        public static void Close()
+        {
+            Trace.Close();
+        }
+
         private static string GenerateCorrelationId()
         {
             var context = AmbientContextCrossServices.TryGetCurrent();
@@ -80,7 +86,7 @@
             {
                 return context.GenerateNextCorrelationId();
             }
-            return null;
+            return Guid.NewGuid().ToString().ToUpperInvariant();
         }
     }
 }

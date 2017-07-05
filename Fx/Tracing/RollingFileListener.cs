@@ -16,8 +16,8 @@
         private const string ROLLING_SIZEMB = "RollingSizeMB";
         private const string ROLLING_INTERVAL_SECOND = "RollingIntervalS";
         private const string BUFFER_SIZEMB = "BufferSizeMB";
-        private const string FILE_RENTION_SIZEMB = "FileRentionSizeMB";
-        private const string FILE_RENTIONTIME_MINUTE = "FileRentionTimeMinute";
+        private const string FILE_RETENTION_SIZEMB = "FileRetentionSizeMB";
+        private const string FILE_RETENTIONTIME_MINUTE = "FileRetentionTimeMinute";
         private const string ENTRY_COLUMNS = "EntryColumns";
         #endregion
 
@@ -25,16 +25,19 @@
         private const string CommitedRelativePath = "commited";
         private const string Delimeter = "\t";
         private readonly Dictionary<string, object> _environmentVariables = new Dictionary<string, object>();
-        private string _tracePath;
+        private string _tracePath = Directory.GetCurrentDirectory();
         private TextWriter _writer;
         private int _streamPosition;
         private DateTime _createUtcTime;
+        // need this as the Attributes collection is not populated from the configuration file until after the instance of your listener is fully constructed.
+        // ref https://stackoverflow.com/questions/11559916/loading-trace-listener-attributes
+        private bool _initialized = false;
         private string[] _columns = new[] { "DeploymentId", "Role", "RoleInstance", "Timestamp", "EventTickCount", "EventId", "Level", "Pid", "Tid", "Message" };
-        private int _rollingSizeMB = 128;
-        private int _rollingIntervalSec = 60;
-        private int _bufferSizeMB = 5 * 1024;
-        private int _fileRentionSizeMB = 1024;
-        private int _fileRentionMinute = 20;
+        private double _rollingSizeMB = 128;
+        private double _rollingIntervalSec = 60;
+        private double _bufferSizeMB = 5 * 1024;
+        private double _fileRentionSizeMB = 1024;
+        private double _fileRentionMinute = 20;
 
         private string Header
         {
@@ -51,10 +54,6 @@
             get { return Path.Combine(_tracePath, CommitedRelativePath); }
         }
 
-        public RollingFileListener()
-        {
-            Init();
-        }
         public override void Write(string message)
         {
             TraceEvent(new TraceEventCache(), nameof(RollingFileListener), TraceEventType.Verbose, 0, message);
@@ -70,6 +69,10 @@
         {
             try
             {
+                if (!_initialized)
+                {
+                    Init();
+                }
                 if (Filter != null && !Filter.ShouldTrace(eventCache, source, eventType, id, message, null, null, null))
                 {
                     return;
@@ -87,6 +90,7 @@
             if (_writer != null)
             {
                 _writer.Close();
+                _writer = null;
             }
             base.Close();
         }
@@ -98,6 +102,32 @@
                 _writer.Flush();
             }
             base.Flush();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            try
+            {
+                if (_writer != null)
+                {
+                    _writer.Close();
+                }
+            }
+            catch (Exception)
+            {
+                // silently
+            }
+            finally
+            {
+                _writer = null;
+            }
+            base.Dispose(disposing);
+        }
+
+        // must override the method if you have self-defined attributes
+        protected override string[] GetSupportedAttributes()
+        {
+            return new[] { ENVIRONMENT_PROVIDER, TRACE_PATH, ROLLING_SIZEMB, ROLLING_INTERVAL_SECOND, ENTRY_COLUMNS, FILE_RETENTION_SIZEMB, BUFFER_SIZEMB, FILE_RETENTIONTIME_MINUTE };
         }
 
         private void InternalWrite(TraceEventCache eventCache, TraceEventType traceType, int id, string message)
@@ -114,6 +144,7 @@
                 (DateTime.UtcNow - _createUtcTime).Seconds < _rollingIntervalSec)
             {
                 _writer.Write(entry);
+                _streamPosition += entry.Length;
                 return;
             }
             CommitTempFile();
@@ -131,7 +162,7 @@
                 {
                     File.Move(file, Path.Combine(CommitedFolder, Path.GetFileName(file)));
                 }
-                RentionFiles();
+                RetentionFiles();
             }
             catch (Exception)
             {
@@ -144,7 +175,7 @@
             }
         }
 
-        private void RentionFiles()
+        private void RetentionFiles()
         {
             try
             {
@@ -218,39 +249,38 @@
 
         private void Init()
         {
-            if (!Attributes.ContainsKey(TRACE_PATH))
+            if (Attributes.ContainsKey(TRACE_PATH))
             {
-                throw new ArgumentNullException("No TracePath defined!");
+                _tracePath = Attributes[TRACE_PATH];
             }
-            _tracePath = Attributes[TRACE_PATH];
             if (Attributes.ContainsKey(ENVIRONMENT_PROVIDER))
             {
                 Type envProviderType = Type.GetType(Attributes[ENVIRONMENT_PROVIDER], true);
                 var instance = Activator.CreateInstance(envProviderType);
                 foreach (var prop in envProviderType.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    _environmentVariables.Add(prop.Name, prop.GetValue(instance));
+                    _environmentVariables[prop.Name] = prop.GetValue(instance);
                 }
             }
             if (Attributes.ContainsKey(ROLLING_SIZEMB))
             {
-                _rollingSizeMB = Convert.ToInt32(Attributes[ROLLING_SIZEMB]);
+                _rollingSizeMB = Convert.ToDouble(Attributes[ROLLING_SIZEMB]);
             }
             if (Attributes.ContainsKey(ROLLING_INTERVAL_SECOND))
             {
-                _rollingIntervalSec = Convert.ToInt32(Attributes[ROLLING_INTERVAL_SECOND]);
+                _rollingIntervalSec = Convert.ToDouble(Attributes[ROLLING_INTERVAL_SECOND]);
             }
             if (Attributes.ContainsKey(BUFFER_SIZEMB))
             {
-                _bufferSizeMB = Convert.ToInt32(Attributes[BUFFER_SIZEMB]);
+                _bufferSizeMB = Convert.ToDouble(Attributes[BUFFER_SIZEMB]);
             }
-            if (Attributes.ContainsKey(FILE_RENTION_SIZEMB))
+            if (Attributes.ContainsKey(FILE_RETENTION_SIZEMB))
             {
-                _fileRentionSizeMB = Convert.ToInt32(Attributes[FILE_RENTION_SIZEMB]);
+                _fileRentionSizeMB = Convert.ToDouble(Attributes[FILE_RETENTION_SIZEMB]);
             }
-            if (Attributes.ContainsKey(FILE_RENTIONTIME_MINUTE))
+            if (Attributes.ContainsKey(FILE_RETENTIONTIME_MINUTE))
             {
-                _fileRentionMinute = Convert.ToInt32(Attributes[FILE_RENTIONTIME_MINUTE]);
+                _fileRentionMinute = Convert.ToDouble(Attributes[FILE_RETENTIONTIME_MINUTE]);
             }
             if (Attributes.ContainsKey(ENTRY_COLUMNS))
             {
@@ -259,6 +289,7 @@
             Directory.CreateDirectory(TempFolder);
             Directory.CreateDirectory(CommitedFolder);
             CommitTempFile();
+            _initialized = true;
         }
     }
 }
