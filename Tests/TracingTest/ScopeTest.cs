@@ -1,20 +1,18 @@
 ﻿namespace XuanLibrary.TracingTest
 {
-    using System.Collections.Generic;
     using System.Linq;
     using XuanLibrary.Fx;
 
     using Xunit;
 
     [Collection("Tracing")]
-    public class ScopeTest
+    public class ScopeTest : TestBase
     {
         [Fact]
         public void TestBasic()
         {
-            try
+            TestWrapper(() =>
             {
-                Init();
                 using (var scouter = new TracingScope("A"))
                 {
                     Assert.Equal("A", TracingScope.GetScopeName());
@@ -27,22 +25,8 @@
                     Assert.Equal("A", TracingScope.GetScopeName());
                     TraceExt.TraceInfo("This is in the scope A again.", null);
                 }
-                Assert.Equal(5, TraceExt.Listeners.OfType<TestTraceListener>().Single().Items.Count);
-            }
-            finally
-            {
-                Clear();
-            }
-        }
-
-        private void Init()
-        {
-            var listener = TraceExt.Listeners.Add(new TestTraceListener());
-        }
-
-        private void Clear()
-        {
-            TraceExt.Listeners.Remove(nameof(TestTraceListener));
+                Assert.Equal(5, Listener.Items.Count);
+            });
         }
     }
 }
