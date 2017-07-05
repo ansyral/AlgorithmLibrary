@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{4C05A7ED-75C0-466C-9353-0FB7D06100FF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructure", "DataStructure\DataStructure.csproj", "{2FCA105B-C3F6-4B82-8350-724CEE394D4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algorithm", "Algorithm\Algorithm.csproj", "{559556F6-3A76-40EF-8540-2201AC11D64A}"
@@ -17,7 +15,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientContext", "Fx\Ambien
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tracing", "Fx\Tracing\Tracing.csproj", "{A6BCACDD-D586-4FE3-8923-A869D412AA49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TracingTest", "TracingTest\TracingTest.csproj", "{4E603033-A41D-4805-A82D-FF879C40AD4B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{311CF08B-F9EA-40C3-854F-84A6E57193AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Tests\Test\Test.csproj", "{4C05A7ED-75C0-466C-9353-0FB7D06100FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TracingTest", "Tests\TracingTest\TracingTest.csproj", "{4E603033-A41D-4805-A82D-FF879C40AD4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2FCA105B-C3F6-4B82-8350-724CEE394D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2FCA105B-C3F6-4B82-8350-724CEE394D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FCA105B-C3F6-4B82-8350-724CEE394D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,6 +51,10 @@ Global
 		{A6BCACDD-D586-4FE3-8923-A869D412AA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6BCACDD-D586-4FE3-8923-A869D412AA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6BCACDD-D586-4FE3-8923-A869D412AA49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C05A7ED-75C0-466C-9353-0FB7D06100FF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E603033-A41D-4805-A82D-FF879C40AD4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4E603033-A41D-4805-A82D-FF879C40AD4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E603033-A41D-4805-A82D-FF879C40AD4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,5 +62,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C05A7ED-75C0-466C-9353-0FB7D06100FF} = {311CF08B-F9EA-40C3-854F-84A6E57193AC}
+		{4E603033-A41D-4805-A82D-FF879C40AD4B} = {311CF08B-F9EA-40C3-854F-84A6E57193AC}
 	EndGlobalSection
 EndGlobal

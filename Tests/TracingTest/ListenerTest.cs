@@ -9,6 +9,7 @@
 
     using Xunit;
 
+    [Collection("Tracing")]
     public class ListenerTest
     {
         [Fact]

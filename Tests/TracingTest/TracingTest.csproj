@@ -62,7 +62,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Fx\Tracing\Tracing.csproj">
+    <ProjectReference Include="..\..\Fx\Tracing\Tracing.csproj">
       <Project>{a6bcacdd-d586-4fe3-8923-a869d412aa49}</Project>
       <Name>Tracing</Name>
     </ProjectReference>
