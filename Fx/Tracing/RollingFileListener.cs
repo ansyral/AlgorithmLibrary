@@ -130,6 +130,8 @@
             return new[] { ENVIRONMENT_PROVIDER, TRACE_PATH, ROLLING_SIZEMB, ROLLING_INTERVAL_SECOND, ENTRY_COLUMNS, FILE_RETENTION_SIZEMB, BUFFER_SIZEMB, FILE_RETENTIONTIME_MINUTE };
         }
 
+        public override string Name => nameof(RollingFileListener);
+
         private void InternalWrite(TraceEventCache eventCache, TraceEventType traceType, int id, string message)
         {
             string entry = GetEntry(eventCache, traceType, id, message);

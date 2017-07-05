@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="ListenerTest.cs" />
     <Compile Include="ScopeTest.cs" />
+    <Compile Include="TestTraceListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

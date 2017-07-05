@@ -79,6 +79,11 @@
             Trace.Close();
         }
 
+        public static TraceListenerCollection Listeners
+        {
+            get { return Trace.Listeners; }
+        }
+
         private static string GenerateCorrelationId()
         {
             var context = AmbientContextCrossServices.TryGetCurrent();
