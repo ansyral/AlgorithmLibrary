@@ -23,11 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TracingTest", "Tests\Tracin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MEF", "MEF", "{41A778B2-795D-4110-AFFE-E7A637970135}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEFContainer", "Fx\MEFContainer\MEFContainer.csproj", "{65CD6C73-A854-4891-9D44-A6DFC741397B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEFContainer", "Fx\MEF\MEFContainer\MEFContainer.csproj", "{65CD6C73-A854-4891-9D44-A6DFC741397B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEFPlugins", "Fx\MEFPlugins\MEFPlugins.csproj", "{2BC510D4-9888-4EDF-8E9C-760B81A434AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEFPlugins", "Fx\MEF\MEFPlugins\MEFPlugins.csproj", "{2BC510D4-9888-4EDF-8E9C-760B81A434AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEFConsole", "Fx\MEFConsole\MEFConsole.csproj", "{6EBAFE30-74CA-47E3-BB7A-25238B454D65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEFConsole", "Fx\MEF\MEFConsole\MEFConsole.csproj", "{6EBAFE30-74CA-47E3-BB7A-25238B454D65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
