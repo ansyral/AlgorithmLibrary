@@ -46,6 +46,7 @@
       <HintPath>..\..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -72,12 +73,14 @@
     <Compile Include="GraphAlgoTest.cs" />
     <Compile Include="HeapSortAlgoTest.cs" />
     <Compile Include="HeapTest.cs" />
+    <Compile Include="HybridStreamSerializationTest.cs" />
     <Compile Include="MergeSortAlgoTest.cs" />
     <Compile Include="NonComparableSortAlgoTest.cs" />
     <Compile Include="OnSquareSortAlgoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickSortAlgoTest.cs" />
     <Compile Include="TestDataStructure\Node.cs" />
+    <Compile Include="TestDataStructure\TestModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -98,6 +101,10 @@
     <ProjectReference Include="..\..\Fx\AmbientConfiguration\AmbientConfiguration.csproj">
       <Project>{d475f12c-6c6e-4881-9c90-163cac11fbc3}</Project>
       <Name>AmbientConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Fx\Serialization\Serialization.csproj">
+      <Project>{72815e9d-912d-4c0e-a478-f116e221966f}</Project>
+      <Name>Serialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Fx\Utility\Utility.csproj">
       <Project>{58467923-b066-4e8b-adf3-04c63cc50bc2}</Project>
