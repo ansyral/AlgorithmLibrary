@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MEFConsole", "Fx\MEF\MEFCon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization", "Fx\Serialization\Serialization.csproj", "{72815E9D-912D-4C0E-A478-F116E221966F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IncrementalBuild", "Fx\IncrementalBuild\IncrementalBuild.csproj", "{3EC93621-7E4E-495E-9F1A-15264BBDF33E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{72815E9D-912D-4C0E-A478-F116E221966F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72815E9D-912D-4C0E-A478-F116E221966F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72815E9D-912D-4C0E-A478-F116E221966F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC93621-7E4E-495E-9F1A-15264BBDF33E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC93621-7E4E-495E-9F1A-15264BBDF33E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC93621-7E4E-495E-9F1A-15264BBDF33E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC93621-7E4E-495E-9F1A-15264BBDF33E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
