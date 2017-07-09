@@ -59,6 +59,7 @@
                     fs,
                     (obj, stream) =>
                     {
+                        // leave stream open as we still need to write other content into the stream.
                         using (var sw = new StreamWriter(stream, Encoding.UTF8, 0x100, true))
                         {
                             JsonUtility.Serialize(sw, obj);

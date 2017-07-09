@@ -102,6 +102,8 @@
             }
             int contentPosition = segment.ContentStartOffset;
             int indexLength = (segment.Length - segment.HeaderLength)/4;
+
+            // couldn't use Seek(segment.HeaderLength, SeekOrigin.Current) because we call ReadSegment() first and SeekOrigin.Current isn't at the begining of Header. 
             _underlyingStream.Seek(contentPosition, SeekOrigin.Begin);
             int[] indices = new int[indexLength];
             for (int i = 0; i < indexLength; i++)
