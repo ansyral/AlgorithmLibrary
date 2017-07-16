@@ -74,11 +74,14 @@
     <Compile Include="HeapSortAlgoTest.cs" />
     <Compile Include="HeapTest.cs" />
     <Compile Include="HybridStreamSerializationTest.cs" />
+    <Compile Include="IncrementalBuildTest.cs" />
     <Compile Include="MergeSortAlgoTest.cs" />
     <Compile Include="NonComparableSortAlgoTest.cs" />
     <Compile Include="OnSquareSortAlgoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickSortAlgoTest.cs" />
+    <Compile Include="TestDataStructure\IncrementalFx\BuildInput.cs" />
+    <Compile Include="TestDataStructure\IncrementalFx\BuildOperator.cs" />
     <Compile Include="TestDataStructure\Node.cs" />
     <Compile Include="TestDataStructure\TestModel.cs" />
   </ItemGroup>
@@ -101,6 +104,10 @@
     <ProjectReference Include="..\..\Fx\AmbientConfiguration\AmbientConfiguration.csproj">
       <Project>{d475f12c-6c6e-4881-9c90-163cac11fbc3}</Project>
       <Name>AmbientConfiguration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Fx\IncrementalBuild\IncrementalBuild.csproj">
+      <Project>{3ec93621-7e4e-495e-9f1a-15264bbdf33e}</Project>
+      <Name>IncrementalBuild</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Fx\Serialization\Serialization.csproj">
       <Project>{72815e9d-912d-4c0e-a478-f116e221966f}</Project>

@@ -4,16 +4,16 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Builder<Output>
+    public class Builder<Input, Output> where Input : IInput
     {
-        public IOperator<IInput, Output> BuildOperation { get; private set; }
+        public IOperator<Input, Output> BuildOperation { get; private set; }
 
-        public Builder(IOperator<IInput, Output> operation)
+        public Builder(IOperator<Input, Output> operation)
         {
             BuildOperation = operation;
         }
 
-        public List<Output> BuildWithIncremental(IEnumerable<IInput> inputCollection, BuildContext context)
+        public List<Output> BuildWithIncremental(IEnumerable<Input> inputCollection, BuildContext context)
         {
             if (inputCollection == null)
             {
@@ -24,19 +24,20 @@
                 throw new ArgumentNullException(nameof(context));
             }
 
-            context.UpdateInputCache(inputCollection);
+            context.UpdateInputCache(inputCollection.OfType<IChangePropertyProvider>());
             List<Output> outputs = new List<Output>();
             if (!context.CanIncremental)
             {
                 outputs.AddRange(inputCollection.Select(input => GetOutputAndUpdateCache(input, context)));
+                context.SaveCache();
                 return outputs;
             }
-            var changes = context.GetChangesWithDependencies(inputCollection).OfType<IInput>().ToList();
+            var changes = context.GetChangesWithDependencies(inputCollection.OfType<IInput>()).OfType<Input>().ToList();
             if (changes.Count > 0)
             {
                 outputs.AddRange(changes.Select(change => GetOutputAndUpdateCache(change, context)));
             }
-            var unChanged = inputCollection.Except(changes, new InputKeyEqualityComparer());
+            var unChanged = inputCollection.OfType<IInput>().Except(changes.OfType<IInput>(), new InputKeyEqualityComparer());
             if (unChanged.Any())
             {
                 outputs.AddRange(context.GetCachedOutput<Output>(unChanged));
@@ -45,7 +46,7 @@
             return outputs;
         }
 
-        private Output GetOutputAndUpdateCache(IInput input, BuildContext context)
+        private Output GetOutputAndUpdateCache(Input input, BuildContext context)
         {
             var output = BuildOperation.Operate(input, context);
             context.DG.ClearDependency(input);

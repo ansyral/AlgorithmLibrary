@@ -45,6 +45,12 @@
             {
                 throw new ArgumentNullException(nameof(dependency));
             }
+
+            // ignore self-dependency
+            if (dependency.From == dependency.To)
+            {
+                return;
+            }
             UpdateIndex(_dependencies, dependency, dependency.To);
             UpdateIndex(_reportedBy, dependency, dependency.ReportedBy);
         }
