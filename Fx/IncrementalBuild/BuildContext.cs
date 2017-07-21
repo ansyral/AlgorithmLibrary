@@ -33,7 +33,7 @@
             }
         }
 
-        public void UpdateInputCache(IEnumerable<IChangePropertyProvider> inputs)
+        public void UpdateInputCache<Input>(IEnumerable<Input> inputs) where Input : IChangePropertyProvider
         {
             foreach (var input in inputs)
             {
@@ -42,7 +42,7 @@
             }
         }
 
-        public void UpdateOutputCache<Output>(IChangePropertyProvider input, Output output)
+        public void UpdateOutputCache<Input, Output>(Input input, Output output) where Input : IChangePropertyProvider
         {
             string filename = IncrementalUtility.CreateRandomFileName(_cacheFolder);
             using (var fs = File.Create(Path.Combine(_cacheFolder, filename)))
@@ -52,9 +52,9 @@
             _currentCache.OutputCacheIndex[input.Key] = filename;
         }
 
-        public List<IInput> GetChangesWithDependencies(IEnumerable<IInput> inputs)
+        public List<Input> GetChangesWithDependencies<Input>(IEnumerable<Input> inputs) where Input : IInput
         {
-            var res = new List<IInput>();
+            var res = new List<Input>();
             foreach (var input in inputs)
             {
                 string lastProperties;
@@ -62,13 +62,13 @@
                     _currentCache.InputCache[input.Key] != lastProperties)
                 {
                     res.Add(input);
-                    res.AddRange(DG.GetDependencyFrom(input).OfType<IInput>());
+                    res.AddRange(DG.GetDependencyFrom(input).OfType<Input>());
                 }
             }
             return res;
         }
 
-        public List<Output> GetCachedOutput<Output>(IEnumerable<IChangePropertyProvider> inputs)
+        public List<Output> GetCachedOutput<Input, Output>(IEnumerable<Input> inputs) where Input : IChangePropertyProvider
         {
             var res = new List<Output>();
             var binaryFormatter = new BinaryFormatter();

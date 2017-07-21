@@ -7,9 +7,9 @@
     {
     }
 
-    public class InputKeyEqualityComparer : EqualityComparer<IInput>
+    public class InputKeyEqualityComparer<T> : EqualityComparer<T> where T : IInput
     {
-        public override bool Equals(IInput x, IInput y)
+        public override bool Equals(T x, T y)
         {
             if (x == null && y == null)
             {
@@ -22,7 +22,7 @@
             return false;
         }
 
-        public override int GetHashCode(IInput obj)
+        public override int GetHashCode(T obj)
         {
             if (obj == null)
             {

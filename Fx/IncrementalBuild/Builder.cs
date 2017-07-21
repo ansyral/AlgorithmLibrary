@@ -24,7 +24,7 @@
                 throw new ArgumentNullException(nameof(context));
             }
 
-            context.UpdateInputCache(inputCollection.OfType<IChangePropertyProvider>());
+            context.UpdateInputCache(inputCollection);
             List<Output> outputs = new List<Output>();
             if (!context.CanIncremental)
             {
@@ -32,15 +32,15 @@
                 context.SaveCache();
                 return outputs;
             }
-            var changes = context.GetChangesWithDependencies(inputCollection.OfType<IInput>()).OfType<Input>().ToList();
+            var changes = context.GetChangesWithDependencies(inputCollection).ToList();
             if (changes.Count > 0)
             {
                 outputs.AddRange(changes.Select(change => GetOutputAndUpdateCache(change, context)));
             }
-            var unChanged = inputCollection.OfType<IInput>().Except(changes.OfType<IInput>(), new InputKeyEqualityComparer());
+            var unChanged = inputCollection.Except(changes, new InputKeyEqualityComparer<Input>());
             if (unChanged.Any())
             {
-                outputs.AddRange(context.GetCachedOutput<Output>(unChanged));
+                outputs.AddRange(context.GetCachedOutput<Input, Output>(unChanged));
             }
             context.SaveCache();
             return outputs;
