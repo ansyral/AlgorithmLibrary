@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    // the project has been extracted to "https://github.com/ansyral/IncrementalBuild", will maintain it there
     public class Builder<Input, Output> where Input : IInput
     {
         public IOperator<Input, Output> BuildOperation { get; private set; }
